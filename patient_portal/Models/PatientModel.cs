@@ -88,7 +88,7 @@ namespace PatientPortal.Models
     {
         [Display(Name = "American Indian/Alaska Native")]
         AmericanIndianAlaskaNative = 1,
-        [Display(Name = "American Indian/Alaska Native")]
+        [Display(Name = "Asian")]
         Asian = 2,
         [Display(Name = "Native Hawaiian or Other Pacific Islander")]
         NativeHawaiianOrOtherPacificIslander = 3,
@@ -191,11 +191,6 @@ namespace PatientPortal.Models
         PartialResection = 2,
         [Display(Name = "Complete resection")]
         CompleteResection =3
-    }
-
-    public enum Uria
-    {
-
     }
 
     public enum ImagingType
