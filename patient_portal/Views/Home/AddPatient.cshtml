@@ -1,0 +1,117 @@
+﻿@using dragdropdemo.Utility
+@model dragdropdemo.Models.PatientViewModel
+<script src="~/Content/js/jquery.filedrop.js"></script>
+@{
+    var tabs = new HashSet<string>();
+    var fields = new Dictionary<string, List<ModelMetadata>>();
+    
+    foreach (var property in ViewData.ModelMetadata.Properties)
+    {
+        if (property.PropertyName != "Files" && property.PropertyName != "ID")
+            {
+                foreach (var subprop in property.Properties)
+                {
+                    if (subprop.GetGroupName() != null)
+                    {
+                        if (!fields.ContainsKey(subprop.GetGroupName()))
+                        {
+                            fields[subprop.GetGroupName()] = new List<ModelMetadata>();
+                        }
+
+                    fields[subprop.GetGroupName()].Add(subprop);
+                    tabs.Add(subprop.GetGroupName());
+                    }
+                }
+        }
+    }
+   
+}
+
+
+@using (Html.BeginForm("AddPatient", "Home", FormMethod.Post, new { id = "addpatient_form" }))
+{
+
+<div id="patient_details">
+
+    <div id="tabs">
+    <ul>
+        @foreach (var tab in tabs)
+        {
+         <li><a href="#tabs-@tab">@tab</a></li>   
+        }
+    </ul>
+        @foreach (var tab in tabs)
+        {
+            <div id="tabs-@tab">
+                @Html.ValidationSummary(true)
+                    @foreach (var property in fields[tab])
+                    {
+                        @Html.Label(property.DisplayName ?? property.PropertyName)
+                        var full_name = String.Concat("Patient" + "." + property.PropertyName);
+                        @Html.ValidationMessage(("Patient" + "." + property.PropertyName))
+                
+                        var nullable = Nullable.GetUnderlyingType(property.ModelType);
+
+                        if (property.ModelType.IsEnum || (nullable != null && nullable.IsEnum))
+                        {
+                            @Html.EnumDropDownList(property, "Patient" + "." + property.PropertyName, null)
+                        }
+                        else if (property.ModelType.IsArray)
+                        { 
+                                @Html.EnumMultipleList(property, full_name, null)
+                        }
+                        else
+                        {
+                         @Html.Editor("Patient" + "." + property.PropertyName)   
+                        }
+                    }
+            </div>  
+        }  
+
+</div>
+    
+
+    </div>
+<div id="patient_form">
+    
+  @*  <div class="fixedbutton"><input type="submit" value="Add Patient" id="addpatient_post" /></div> *@
+    <div class="fixedbutton" id="addpatient_ajax"><a>Add Patient</a></div>
+
+
+</div>
+
+}
+
+@Scripts.Render("~/bundles/jqueryval")
+    
+    <script>
+        $(function () {
+            $('#tabs').tabs();
+
+            $("*[id$='Date']").each(function () {
+                $(this).datepicker();
+            });
+
+            $("#addpatient_ajax").click(function (event, ui) {
+                if ($('form#addpatient_form').valid()) {
+                    $.ajax({
+                        url: 'Home/AddPatient',
+                        type: 'post',
+                        data: $('form#addpatient_form').serialize(),
+                        success: function (data) {
+                            $("#dialog").dialog("close");
+                            $("body").load("");
+                        },
+                        error: function (data) {
+                            $("#dialog").html(data.responseText);
+                        }
+                    });
+                }
+            });
+            
+
+                
+        
+            });
+       
+    </script>    

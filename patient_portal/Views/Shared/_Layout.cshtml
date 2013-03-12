@@ -1,0 +1,47 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width" />
+    <title>TGen/SU2C Case Repository</title>
+    <link href="/Content/Site.css" rel="stylesheet"/>
+    <link href="/Content/DataTables/media/css/jquery.dataTables.css" rel="stylesheet"/>
+    <link href="/Content/DataTables/media/css/demo_table_jui.css" rel="stylesheet"/>
+    
+    @*<link href="~/Content/themes/base/jquery.ui.core.css" rel="stylesheet" />
+    <link href="~/Content/themes/base/jquery.ui.dialog.css" rel="stylesheet" />
+    <link href="~/Content/themes/base/jquery.ui.theme.css" rel="stylesheet" />*@
+    @Styles.Render("~/Content/themes/base/css")
+    @* 
+    Using direct link to CSS until I figure out why Mono doesn't work with bundling the CSS
+    @Styles.Render("~/Content/css")
+     *@
+    @Scripts.Render("~/bundles/modernizr")
+
+</head>
+<body>
+    @Scripts.Render("~/bundles/jquery")
+    @Scripts.Render("~/bundles/jqueryui")
+    
+    
+    <header>
+            <div class="content-wrapper">
+                <div class="float-left">
+                    <img src="~/assets/images/tgen_logo.png" height="65" id="tgen-logo"/>
+                    <div class="site-title">
+                    <h1>@Html.ActionLink("Patient Portal", "Index", "Home")</h1></div>
+                </div>
+            </div>
+        @if (User.Identity.IsAuthenticated) {
+                var role = (@User.IsInRole("Admin") ? "Admin" : "User");                
+            <div id="login"><p>Logged in as @User.Identity.Name (@role).@if (@role=="Admin") { @Html.ActionLink("Manage", "Register", "Account") } @Html.ActionLink("Log Out", "LogOff", "Account")</p></div>
+        }
+        </header>
+    <div id="body">
+        <section class="content-wrapper main-content clear-fix">
+    @RenderBody()
+            </section>
+    </div>
+    @RenderSection("scripts", required: false)
+</body>
+</html>
