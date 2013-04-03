@@ -271,10 +271,8 @@
     <Content Include="Content\DataTables\media\images\sort_both.png" />
     <Content Include="Content\DataTables\media\images\sort_desc.png" />
     <Content Include="Content\DataTables\media\images\sort_desc_disabled.png" />
-    <Content Include="Content\iaza17587796252900.gif" />
     <Content Include="Content\js\jquery.filedrop.js" />
     <Content Include="Content\logo.gif" />
-    <Content Include="Content\SU2C_2_onWhite.jpg" />
     <Content Include="Content\tgen_bg.png" />
     <Content Include="Content\themes\base\images\ui-bg_flat_0_aaaaaa_40x100.png" />
     <Content Include="Content\themes\base\images\ui-bg_flat_75_ffffff_40x100.png" />
@@ -399,7 +397,6 @@
     <Content Include="Scripts\jquery.validate.unobtrusive.js" />
     <Content Include="Scripts\jquery.validate.unobtrusive.min.js" />
     <Content Include="Scripts\modernizr-2.5.3.js" />
-    <Content Include="Unity.Mvc3.README.txt" />
     <Content Include="Web.config">
       <SubType>Designer</SubType>
     </Content>
@@ -441,7 +438,6 @@
     <Content Include="Views\Shared\_Layout.cshtml" />
     <Content Include="Views\Web.config" />
     <Content Include="Views\Home\AddPatient.cshtml" />
-    <Content Include="Views\Home\Copy of Index.cshtml" />
     <Content Include="Views\Shared\PatientDetails.cshtml" />
   </ItemGroup>
   <ItemGroup>
