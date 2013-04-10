@@ -49,6 +49,12 @@ namespace PatientPortal.Models
         Microscopic = 1,
         Macroscopic = 2
     }
+    public enum LymphNodeBiopsy
+    {
+        Performed = 1,
+        NotPerformed = 2,
+        Unknown = 3
+    }
 
     public enum Gender
     {
@@ -193,6 +199,16 @@ namespace PatientPortal.Models
         CompleteResection =3
     }
 
+
+    public enum LocalResectionType
+    {//dropdown: WLE, Amputation
+       
+        [Display(Name = "Wide Local Excision")]
+        WideLocalExcision = 1,
+        [Display(Name = "Amputation")]
+        Amputation = 2
+    }
+
     public enum ImagingType
     {
         [Display(Name = "CT Scan")]
@@ -204,16 +220,30 @@ namespace PatientPortal.Models
     }
 
     //Progressive Disease/Stable Disease/Partial REsponse/Complete Response
+    //@todo: change the order
     public enum Response
     {
         [Display(Name = "Progressive disease")]
         ProgressiveDisease = 1,
         [Display(Name = "Stable disease")]
         StableDisease = 2,
+        [Display(Name = "Minor Response")]
+        MinorResponse = 5,
         [Display(Name = "Partial response")]
         PartialResponse = 3,
         [Display(Name = "Complete response")]
         CompleteResponse = 4
+    }
+
+    //mets sites at presentation
+    public enum SitesatPresentation
+    {
+        [Display(Name = "None")]
+        None = 1,
+        [Display(Name = "Multiple")]
+        Multiple = 2,
+        [Display(Name = "Wide Spread")]
+        WideSpread = 3
     }
 
     [BsonIgnoreExtraElements]
@@ -257,6 +287,20 @@ namespace PatientPortal.Models
         [DataType(DataType.MultilineText)]
         public string PatientSummary { get; set; }
 
+        [Display(Name = "Date of Bx", GroupName = "Initial Dx")]
+        [DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = "{0:MM/dd/yyyy}")]
+
+        public DateTime? BxDate { get; set; }
+
+        //TODO: FILE
+        [Display(Name = "Report of Bx", GroupName = "Initial Dx")]
+        [DataType(DataType.MultilineText)]
+        public string BxReport { get; set; }
+
+
+        [Display(Name = "Paraffin block collected", GroupName = "Initial Dx")]
+        public YesNo? ParaffinBlockCollectedInitialDx { get; set; }
+
         [Display(Name = "Date of Dx", GroupName = "Initial Dx")]
         [DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = "{0:MM/dd/yyyy}")]
         
@@ -290,26 +334,18 @@ namespace PatientPortal.Models
         [Display(Name = "T Stage", GroupName = "Initial Dx")]
         public TStage? TStage { get; set; }
 
-
-        [Display(Name = "Date of Bx", GroupName = "Initial Dx")]
-        [DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = "{0:MM/dd/yyyy}")]
-        
-        public DateTime? BxDate { get; set; }
-
-
-        //TODO: FILE
-        [Display(Name = "Report of Bx", GroupName = "Initial Dx")]
-        [DataType(DataType.MultilineText)]
-        public string BxReport { get; set; }
-
-
-        [Display(Name = "Paraffin block collected", GroupName = "Initial Dx")]
-        public YesNo? ParaffinBlockCollectedInitialDx { get; set; }
+        //TODO: Allow for "unknown" value (not just missing)
+        [Display(Name = "LDH Level at Dx  (IU/L) ", GroupName = "Initial Dx")]
+        public int? LDHLevelAtDx { get; set; }
 
         [Display(Name = "Primary Surgery Date", GroupName = "Initial Dx")]
         [DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = "{0:MM/dd/yyyy}")]
         
         public DateTime? PrimarySurgeryDate { get; set; }
+
+
+        [Display(Name = "Lymph node Biopsy", GroupName = "Initial Dx")]
+        public LymphNodeBiopsy? LymphNodeBiopsy { get; set; }
 
         [Display(Name = "Lymph node involvement", GroupName = "Initial Dx")]
         public LymphNodeInvolvement? LymphNodeInvolvement { get; set; }
@@ -328,27 +364,25 @@ namespace PatientPortal.Models
         [Display(Name = "Extracapsular Extensions", GroupName = "Initial Dx")]
         public YesNoUnknown? ExtraCapsularExtensionsLNs { get; set; }
 
-        [Display(Name = "Surgical Resection", GroupName = "Initial Dx")]
+        [Display(Name = "Lymph Node Dissection", GroupName = "Initial Dx")]
         public YesNo? SurgicalResection { get; set; }
 
 
         [Display(Name = "Date of Surgical Resection", GroupName = "Initial Dx")]
         [DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = "{0:MM/dd/yyyy}")]
-        
+       
         public DateTime? SurgicalResectionDate { get; set; }
+
+        [Display(Name = "Type of Surgical Resection", GroupName = "Initial Dx")]
+        [DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = "{0:MM/dd/yyyy}")]
+        public LocalResectionType? SurgicalResectionType { get; set; }
+
 
         [Display(Name = "Extent of Surgery", GroupName = "Initial Dx")]
         [DataType(DataType.MultilineText)]
         public string ExtentOfSurgery { get; set; }
 
-        //TODO: Allow for "unknown" value (not just missing)
-        [Display(Name = "LDH Level at Dx  (IU/L) ", GroupName = "Initial Dx")]
-        public int? LDHLevelAtDx { get; set; }
-
-
-        //pull-down : liver lung bone brain lymph nodes (cervical), lymph nodes(axillary), lymph nodes (inguinal), lymph nodes (other), skin, other
-        [Display(Name = "Metastatic Sites", GroupName = "Initial Dx")]
-        public Site2[] MetastaticSites { get; set; }
+ 
 
         /*    [Display(Name = "LDH Level at Dx  (IU/L) ", GroupName = "Initial Dx")]
             public int LDHLevelAtDx { get; set; }
@@ -367,17 +401,44 @@ namespace PatientPortal.Models
         [Display(Name = "IFN", GroupName = "Initial Dx")]
         public YesNoUnknown? IFNType { get; set; }
 
+        [Display(Name = "Start Date of IFN", GroupName = "Initial Dx")]
+        [DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = "{0:MM/dd/yyyy}")]
+        public DateTime? IFNStartDate { get; set; }
+
+        [Display(Name = "End Date of IFN", GroupName = "Initial Dx")]
+        [DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = "{0:MM/dd/yyyy}")]
+        public DateTime? IFNEndDate { get; set; }
+
+        [Display(Name = "IFN Cycles", GroupName = "Initial Dx")]
+        public string IFNCycles { get; set; }
+
         [Display(Name = "Vaccine", GroupName = "Initial Dx")]
         public YesNoUnknown? ClinicalTrialVaccine { get; set; }
 
-        [Display(Name = "Ipilimumab", GroupName = "Initial Dx")]
-        public YesNoUnknown? ClinicalTrialIpilimumab { get; set; }
+        [Display(Name = "Start Date of Vaccine", GroupName = "Initial Dx")]
+        [DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = "{0:MM/dd/yyyy}")]
+        public DateTime? VaccineStartDate { get; set; }
 
-        [Display(Name = "BRAF inhibitor", GroupName = "Initial Dx")]
-        public YesNoUnknown? ClinicalTrialBRAFInhibitor { get; set; }
+        [Display(Name = "End Date of Vaccine", GroupName = "Initial Dx")]
+        [DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = "{0:MM/dd/yyyy}")]
+        public DateTime? VaccineEndDate { get; set; }
 
+        [Display(Name = "Vaccine Cycles", GroupName = "Initial Dx")]
+        public string VaccineCycles { get; set; }
+    
         [Display(Name = "Other", GroupName = "Initial Dx")]
         public YesNoUnknown? ClinicalTrialOther { get; set; }
+
+        [Display(Name = "Start Date of Other", GroupName = "Initial Dx")]
+        [DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = "{0:MM/dd/yyyy}")]
+        public DateTime? OtherStartDate { get; set; }
+
+        [Display(Name = "End Date of Other", GroupName = "Initial Dx")]
+        [DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = "{0:MM/dd/yyyy}")]
+        public DateTime? OtherEndDate { get; set; }
+
+        [Display(Name = "Other Cycles", GroupName = "Initial Dx")]
+        public string OtherCycles { get; set; }
 
         [Display(Name = "Clinical trial - Other", GroupName = "Initial Dx")]
         public string ClinicalTrialOtherDescription { get; set; }
@@ -393,7 +454,9 @@ namespace PatientPortal.Models
         [DataType(DataType.MultilineText)]
         public string ChronicToxicitiesAdjuvantTreatment { get; set; }
 
-
+        //pull-down : liver lung bone brain lymph nodes (cervical), lymph nodes(axillary), lymph nodes (inguinal), lymph nodes (other), skin, other
+        [Display(Name = "Metastatic Sites at Presentation", GroupName = "Initial Dx")]
+        public SitesatPresentation? MetastaticSites { get; set; }
 
 
         // Metastatic Disease
@@ -410,6 +473,40 @@ namespace PatientPortal.Models
 
         [Display(Name = " Biopsy or resection of disease", GroupName = "Metastatic Disease")]
         public BiopsyOrResection? BiopsyOrResection { get; set; }
+
+        [Display(Name = "Ipilimumab", GroupName = "Metastatic Disease")]
+        public YesNoUnknown? ClinicalTrialIpilimumab { get; set; }
+
+        [Display(Name = "Start Date of Ipilimumab", GroupName = "Metastatic Disease")]
+        [DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = "{0:MM/dd/yyyy}")]
+        public DateTime? IpilimumabStartDate { get; set; }
+
+        [Display(Name = "End Date of Ipilimumab", GroupName = "Metastatic Disease")]
+        [DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = "{0:MM/dd/yyyy}")]
+        public DateTime? IpilimumabEndDate { get; set; }
+
+        [Display(Name = "Ipilimumab Cycles", GroupName = "Metastatic Disease")]
+        public string IpilimumabCycles { get; set; }
+
+        [Display(Name = "Response to Ipilimumab", GroupName = "Metastatic Disease")]
+        public Response? ClinicalTrialIpilimumabResponse { get; set; }
+
+        [Display(Name = "BRAF inhibitor", GroupName = "Metastatic Disease")]
+        public YesNoUnknown? ClinicalTrialBRAFInhibitor { get; set; }
+
+        [Display(Name = "Start Date of BRAF inhibitor", GroupName = "Metastatic Disease")]
+        [DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = "{0:MM/dd/yyyy}")]
+        public DateTime? BrafInhStartDate { get; set; }
+
+        [Display(Name = "End Date of BRAF inhibitor", GroupName = "Metastatic Disease")]
+        [DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = "{0:MM/dd/yyyy}")]
+        public DateTime? BrafInhEndDate { get; set; }
+
+        [Display(Name = "BRAF inhibitor Cycles", GroupName = "Metastatic Disease")]
+        public string BrafInhCycles { get; set; }
+
+        [Display(Name = "Response to BRAF inhibitor", GroupName = "Metastatic Disease")]
+        public Response? ClinicalTrialBrafInhResponse { get; set; }
 
         //TODO:  Biopsy or resection of disease
         //dropdown: biopsy, partial resection, complete resection
@@ -597,6 +694,7 @@ namespace PatientPortal.Models
         [DisplayFormat(DataFormatString = "{0:F2}", ApplyFormatInEditMode = true)]
         [Display(Name = "LDH", GroupName = "Metastatic Disease")]
         public double? LDH { get; set; }
+
 
         //section urinalysis
 
