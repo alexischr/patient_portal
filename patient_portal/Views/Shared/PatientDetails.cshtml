@@ -4,30 +4,31 @@
 @{
     var tabs = new HashSet<string>();
     var fields = new Dictionary<string, List<ModelMetadata>>();
-    
+
     foreach (var property in ViewData.ModelMetadata.Properties)
     {
-        if (property.PropertyName != "Files" && property.PropertyName != "ID" )
+        if (property.PropertyName != "Files" && property.PropertyName != "ID")
+        {
+            foreach (var subprop in property.Properties)
             {
-                foreach (var subprop in property.Properties)
+                if (subprop.PropertyName != "ID" && subprop.GetGroupName() != null)
                 {
-                    if ( subprop.PropertyName != "ID" && subprop.GetGroupName() != null )
+                    if (!fields.ContainsKey(subprop.GetGroupName()))
                     {
-                        if (!fields.ContainsKey(subprop.GetGroupName()))
-                        {
-                            fields[subprop.GetGroupName()] = new List<ModelMetadata>();
-                        }
-
-                    
-                        fields[subprop.GetGroupName()].Add(subprop);
-                        tabs.Add(subprop.GetGroupName());
+                        fields[subprop.GetGroupName()] = new List<ModelMetadata>();
                     }
+
+
+                    fields[subprop.GetGroupName()].Add(subprop);
+                    tabs.Add(subprop.GetGroupName());
                 }
+            }
         }
     }
    
 }
-@using (Html.BeginForm()) {
+@using (Html.BeginForm())
+{
 
 <div id="patient_details">
     <h2>@Model.Patient.ID</h2>
@@ -36,7 +37,7 @@
     <ul>
         @foreach (var tab in tabs)
         {
-         <li><a href="#tabs-@tab">@tab</a></li>   
+         <li><a href="#tabs-@tab">@tab</a></li>
         }
     </ul>
         @foreach (var tab in tabs)
@@ -44,7 +45,13 @@
             <div id="tabs-@tab">
                     @foreach (var property in fields[tab])
                     {
+                        if (property.ModelType.Name == "SectionName")
+                        {
+                                <div class="subsection">@Html.Label("Patient" + "." + property.PropertyName) </div>
+                        }
+                        else {
                         @Html.Label(property.DisplayName ?? property.PropertyName)
+                    }
 
                         var full_name = String.Concat("Patient" + "." + property.PropertyName);
 
@@ -52,29 +59,33 @@
                         {
                             @Html.Display(full_name)
                         }
-                        else 
+                        else
                         {
                             
                             @Html.ValidationMessage(full_name)
 
                             var nullable = Nullable.GetUnderlyingType(property.ModelType);
-                
+
                             if (property.ModelType.IsEnum || (nullable != null && nullable.IsEnum))
                             {
-                                @Html.EnumDropDownList(property, full_name,  null)
+                                @Html.EnumDropDownList(property, full_name, null)
                             }
                             else if (property.ModelType.IsArray)
-                            { 
+                            {
                                 @Html.EnumMultipleList(property, full_name, null)
+                            }
+                            else if (property.ModelType.Name == "SectionName")
+                            {
+                                
                             }
                             else
                             {
-                             @Html.Editor("Patient" + "." + property.PropertyName)                            
-                            }  
+                             @Html.Editor("Patient" + "." + property.PropertyName)
+                            }
                         }
                     }
-            </div>  
-        }  
+            </div>
+        }
 
 </div>
     
@@ -84,7 +95,8 @@
     @Html.ValidationSummary(true)
     <p></p>
     <div id="savechanges" class="button"><input type="submit" value="Save Changes" /></div>
-    @if (!Model.Patient.Locked) {
+    @if (!Model.Patient.Locked)
+    {
         <div class="fixedbutton_disabled" id="lock" data-patientid="@Model.Patient.ID"><a>Lock Details</a></div>
     }
     <div class="fixedbutton" id="delete" data-patientid="@Model.Patient.ID"><a href="Home/PatientDelete?id=@Model.Patient.ID">Delete Patient</a></div>
@@ -110,7 +122,7 @@
     <h3>Report Generation</h3>
     <div class="fixedbutton">@Html.ActionLink("Presentation", "PPT", new { id = Model.Patient.ID })</div>
     <div class="fixedbutton_disabled"><a>Genomic Report</a></div>
-</div>   
+</div>
 }
 
 @Scripts.Render("~/bundles/jqueryval")
@@ -137,7 +149,7 @@
 
                 maxfiles: 2,
                 maxfilesize: 2,
-                url: '/Home/UploadFiles/?id='+ id,
+                url: '/Home/UploadFiles/?id=' + id,
 
                 uploadFinished: function (i, file, response) {
                     $.data(file).addClass('done');
@@ -231,6 +243,5 @@
             dropify("patient_files");
         });
 
-//});   
+        //});
         </script>
-

@@ -306,7 +306,10 @@ namespace PatientPortal.Models
         [DataType(DataType.MultilineText)]
         public string PatientSummary { get; set; }
 
-       
+        //primary tumor section
+        [Display(Name = "Primary Tumor", GroupName = "Primary Dx")]
+        public SectionName TestTitle2 { get; set; }
+
         [Display(Name = "Primary Tumor Date of Bx", GroupName = "Primary Dx")]
         [DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = "{0:MM/dd/yyyy}")]
 
@@ -364,7 +367,7 @@ namespace PatientPortal.Models
         public DateTime? PrimarySurgeryDate { get; set; }
 
         // Lymph Node sub section
-         [Display(Name = "Sentinal Lymph Node Biopsy", GroupName = "Initial Dx")]
+         [Display(Name = "Sentinel Lymph Node Biopsy", GroupName = "Primary Dx")]
         public SectionName TestTitle1 { get; set; }
 
         [Display(Name = "Lymph node Biopsy", GroupName = "Primary Dx")]
@@ -426,6 +429,9 @@ namespace PatientPortal.Models
         //yes/no/unknown  X
         
         // Adjuvant Treatment sub section
+        [Display(Name = "Adjuvant Treatment", GroupName = "Primary Dx")]
+        public SectionName TestTitle3 { get; set; }
+
         [Display(Name = "IFN", GroupName = "Primary Dx")]
         public YesNoUnknown? IFNType { get; set; }
 
@@ -491,6 +497,9 @@ namespace PatientPortal.Models
         //date of recurrence
         //first Mets
         [Display(Name = "First Metastatic Dx", GroupName = "Metastatic Disease")]
+        public SectionName TestTitle4 { get; set; }
+
+        [Display(Name = "First Metastatic Dx", GroupName = "Metastatic Disease")]
         public Site2[] FirstSiteOfRecurrence { get; set; }
 
 
@@ -512,6 +521,9 @@ namespace PatientPortal.Models
 
         [Display(Name = "Cycles", GroupName = "Metastatic Disease")]
         public string FirstTreatmentCycles { get; set; }
+
+        [Display(Name = "Radiation on First Metastatic Dx", GroupName = "Metastatic Disease")]
+        public SectionName TestTitle5 { get; set; }
 
         [Display(Name = "Radiation?", GroupName = "Metastatic Disease")]
         public YesNoUnknown? FirstRadiation { get; set; }
@@ -647,7 +659,8 @@ namespace PatientPortal.Models
 
 
         //Radiology
-
+        [Display(Name = "Past Medical History", GroupName = "Current Presentation")]
+        public SectionName TestTitle6 { get; set; }
 
         [Display(Name = "Comorbid medical conditions", GroupName = "Current Presentation")]
         [DataType(DataType.MultilineText)]
@@ -683,6 +696,9 @@ namespace PatientPortal.Models
 
         //Imaging/Radiology
         //dropdown: CT Scan/MRI/PET Scan
+        [Display(Name = "Imaging/Radiology", GroupName = "Current Presentation")]
+        public SectionName TestTitle7 { get; set; }
+
         [Display(Name = "Imaging Type", GroupName = "Current Presentation")]
         public ImagingType? ImagingType { get; set; }
 
@@ -701,6 +717,8 @@ namespace PatientPortal.Models
         public string RadiologyReport { get; set; }
 
         //Laboratory values
+        [Display(Name = "LAB Work", GroupName = "Current Presentation")]
+        public SectionName TestTitle8 { get; set; }
 
         //Blood Work
         [DisplayFormat(DataFormatString = "{0:F2}", ApplyFormatInEditMode = true)]
@@ -771,6 +789,8 @@ namespace PatientPortal.Models
 
 
         //Physical Exam
+        [Display(Name = "Physical Exam", GroupName = "Current Presentation")]
+        public SectionName TestTitle9 { get; set; }
         [DisplayFormat(DataFormatString = "{0:F2}", ApplyFormatInEditMode = true)]
         [Display(Name = "HT (cm)", GroupName = "Current Presentation")]
         public double? Height { get; set; }
