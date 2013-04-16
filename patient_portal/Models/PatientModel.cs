@@ -216,6 +216,12 @@ namespace PatientPortal.Models
         CompleteResponse = 4
     }
 
+    public class SectionName
+    {
+
+
+    }
+
     [BsonIgnoreExtraElements]
     public class PatientModel
     {
@@ -257,6 +263,9 @@ namespace PatientPortal.Models
         [DataType(DataType.MultilineText)]
         public string PatientSummary { get; set; }
 
+        [Display(Name = "Test Subsection Title #1", GroupName = "Initial Dx")]
+        public SectionName TestTitle1 { get; set; }
+
         [Display(Name = "Date of Dx", GroupName = "Initial Dx")]
         [DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = "{0:MM/dd/yyyy}")]
         
@@ -290,6 +299,8 @@ namespace PatientPortal.Models
         [Display(Name = "T Stage", GroupName = "Initial Dx")]
         public TStage? TStage { get; set; }
 
+        [Display(Name = "Biopsy Details (Test Title #2)", GroupName = "Initial Dx")]
+        public SectionName TestTitle2 { get; set; }
 
         [Display(Name = "Date of Bx", GroupName = "Initial Dx")]
         [DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = "{0:MM/dd/yyyy}")]
