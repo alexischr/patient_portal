@@ -37,7 +37,7 @@
     <ul>
         @foreach (var tab in tabs)
         {
-         <li><a href="#tabs-@tab">@tab</a></li>   
+         <li><a href="#tabs-@tab">@tab</a></li>
         }
     </ul>
         @foreach (var tab in tabs)
@@ -49,7 +49,7 @@
                         {
                                 <div class="subsection">@Html.Label("Patient" + "." + property.PropertyName) </div>
                         }
-                        else { 
+                        else {
                         @Html.Label(property.DisplayName ?? property.PropertyName)
                     }
 
@@ -71,7 +71,7 @@
                                 @Html.EnumDropDownList(property, full_name, null)
                             }
                             else if (property.ModelType.IsArray)
-                            { 
+                            {
                                 @Html.EnumMultipleList(property, full_name, null)
                             }
                             else if (property.ModelType.Name == "SectionName")
@@ -80,12 +80,12 @@
                             }
                             else
                             {
-                             @Html.Editor("Patient" + "." + property.PropertyName)                            
+                             @Html.Editor("Patient" + "." + property.PropertyName)
                             }
                         }
                     }
-            </div>  
-        }  
+            </div>
+        }
 
 </div>
     
@@ -122,7 +122,7 @@
     <h3>Report Generation</h3>
     <div class="fixedbutton">@Html.ActionLink("Presentation", "PPT", new { id = Model.Patient.ID })</div>
     <div class="fixedbutton_disabled"><a>Genomic Report</a></div>
-</div>   
+</div>
 }
 
 @Scripts.Render("~/bundles/jqueryval")
@@ -149,7 +149,7 @@
 
                 maxfiles: 2,
                 maxfilesize: 2,
-                url: '/Home/UploadFiles/?id='+ id,
+                url: '/Home/UploadFiles/?id=' + id,
 
                 uploadFinished: function (i, file, response) {
                     $.data(file).addClass('done');
@@ -243,6 +243,5 @@
             dropify("patient_files");
         });
 
-//});   
+        //});
         </script>
-

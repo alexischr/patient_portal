@@ -43,7 +43,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Aspose.Slides">
-      <HintPath>..\..\..\..\..\..\Program Files (x86)\Aspose\Aspose.Slides for .NET\Bin\net4.0\Aspose.Slides.dll</HintPath>
+      <HintPath>..\packages\Aspose.Slides.NET.7.3.0\lib\net4.0-client\Aspose.Slides.dll</HintPath>
     </Reference>
     <Reference Include="CommonCore.Base">
       <HintPath>..\packages\CommonCore.1.0.0.7\lib\net35\CommonCore.Base.dll</HintPath>
@@ -380,6 +380,7 @@
     <Content Include="Content\template.pptx" />
     <None Include="Properties\PublishProfiles\GEMM Test.pubxml" />
     <None Include="Properties\PublishProfiles\GEMM.pubxml" />
+    <None Include="Properties\PublishProfiles\GemmPublish.pubxml" />
     <None Include="Properties\PublishProfiles\ngd-data.pubxml" />
     <None Include="Scripts\jquery-1.7.1.intellisense.js" />
     <Content Include="Scripts\DataTables\extras\TableTools\media\js\ZeroClipboard.js" />
@@ -398,6 +399,9 @@
     <Content Include="Scripts\jquery.validate.unobtrusive.js" />
     <Content Include="Scripts\jquery.validate.unobtrusive.min.js" />
     <Content Include="Scripts\modernizr-2.5.3.js" />
+    <Content Include="Views\Shared\PatientDetails.cshtml">
+      <SubType>Code</SubType>
+    </Content>
     <Content Include="Web.config">
       <SubType>Designer</SubType>
     </Content>
@@ -439,7 +443,6 @@
     <Content Include="Views\Shared\_Layout.cshtml" />
     <Content Include="Views\Web.config" />
     <Content Include="Views\Home\AddPatient.cshtml" />
-    <Content Include="Views\Shared\PatientDetails.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Code\" />
