@@ -378,6 +378,7 @@
     <Content Include="Content\DataTables\extras\TableTools\media\images\psd\copy document.psd" />
     <Content Include="Content\DataTables\extras\TableTools\media\images\psd\collection.psd" />
     <Content Include="Content\template.pptx" />
+    <None Include="Properties\PublishProfiles\GEMM Test.pubxml" />
     <None Include="Properties\PublishProfiles\GEMM.pubxml" />
     <None Include="Properties\PublishProfiles\ngd-data.pubxml" />
     <None Include="Scripts\jquery-1.7.1.intellisense.js" />
