@@ -29,7 +29,9 @@ namespace PatientPortal.Models
         II = 2,
         III = 3,
         IV = 4,
-        V = 5
+        V = 5,
+        Unknown = 6,
+        NA= 7
     }
 
     public enum TStage
@@ -49,18 +51,24 @@ namespace PatientPortal.Models
         T1=1,
         T2=2,
         T3=3,
-        T4=4
+        T4=4,
+        [Display(Name = "Unknown")]
+        T5=5
     }
     public enum StageN
     {
         N0 = 0,
         N1 = 1,
-        N2 = 2 
+        N2 = 2,
+         [Display(Name = "Unknown")]
+        N3 = 3
     }
     public enum StageM
     {
         M0 = 0,
-        M1 = 1
+        M1 = 1,
+        [Display(Name = "Unknown")]
+        M2 = 2
     }
 
     public enum LymphNodeInvolvement
@@ -138,6 +146,14 @@ namespace PatientPortal.Models
         Yes = 1,
         No = 2,
         Unknown = 3
+    }
+    public enum YesNoNotDone
+    {
+        Yes = 1,
+        No = 2,
+        [Display(Name = "Not Done")]
+        NotDone = 3,
+        Unknown = 4
     }
 
     public enum Mitoses
@@ -251,7 +267,9 @@ namespace PatientPortal.Models
         [Display(Name = "Partial response")]
         PartialResponse = 3,
         [Display(Name = "Complete response")]
-        CompleteResponse = 4
+        CompleteResponse = 4,
+        [Display(Name = "N/A")]
+        NA = 5
     }
 
     //SurgicalMargin
@@ -367,6 +385,10 @@ namespace PatientPortal.Models
         [Display(Name = "Lesion Site Type", GroupName = "Primary Dx")]
         public LesionSiteType? LesionSiteType { get; set; }
 
+        //pull-down : liver lung bone brain lymph nodes (cervical), lymph nodes(axillary), lymph nodes (inguinal), lymph nodes (other), skin, other
+        [Display(Name = "Metastatic Sites at Presentation", GroupName = "Primary Dx")]
+        public SitesatPresentation? MetastaticSites { get; set; }
+
         [Display(Name = "Primary Tumor Features", GroupName = "Primary Dx")]
         public SectionName TestTitle22 { get; set; }
 
@@ -433,6 +455,9 @@ namespace PatientPortal.Models
         [DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = "{0:MM/dd/yyyy}")]
         
         public DateTime? PrimarySurgeryDate { get; set; }
+
+        [Display(Name = "Primary Surgery", GroupName = "Primary Dx")]
+        public string PrimarySurgery { get; set; }
 
         // Lymph Node sub section
          [Display(Name = "Sentinel Lymph Node Biopsy", GroupName = "Primary Dx")]
@@ -556,9 +581,6 @@ namespace PatientPortal.Models
         [DataType(DataType.MultilineText)]
         public string ChronicToxicitiesAdjuvantTreatment { get; set; }
 
-        //pull-down : liver lung bone brain lymph nodes (cervical), lymph nodes(axillary), lymph nodes (inguinal), lymph nodes (other), skin, other
-        [Display(Name = "Metastatic Sites at Presentation", GroupName = "Primary Dx")]
-        public SitesatPresentation? MetastaticSites { get; set; }
         
 
         // Metastatic Disease
@@ -1050,10 +1072,10 @@ namespace PatientPortal.Models
         //section urinalysis
 
         [Display(Name = "Proteinuria", GroupName = "Current Presentation")]
-        public YesNo? Proteinuria { get; set; }
+        public YesNoNotDone? Proteinuria { get; set; }
 
         [Display(Name = "Hematuria", GroupName = "Current Presentation")]
-        public YesNo? Hematuria { get; set; }
+        public YesNoNotDone? Hematuria { get; set; }
 
 
         //Physical Exam
