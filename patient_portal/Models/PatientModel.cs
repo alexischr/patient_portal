@@ -29,7 +29,9 @@ namespace PatientPortal.Models
         II = 2,
         III = 3,
         IV = 4,
-        V = 5
+        V = 5,
+        Unknown = 6,
+        NA= 7
     }
 
     public enum TStage
@@ -42,6 +44,31 @@ namespace PatientPortal.Models
         T3b = 6,
         T4a = 7,
         T4b = 8
+    }
+    public enum StageT
+    {
+        T0=0,
+        T1=1,
+        T2=2,
+        T3=3,
+        T4=4,
+        [Display(Name = "Unknown")]
+        T5=5
+    }
+    public enum StageN
+    {
+        N0 = 0,
+        N1 = 1,
+        N2 = 2,
+         [Display(Name = "Unknown")]
+        N3 = 3
+    }
+    public enum StageM
+    {
+        M0 = 0,
+        M1 = 1,
+        [Display(Name = "Unknown")]
+        M2 = 2
     }
 
     public enum LymphNodeInvolvement
@@ -119,6 +146,14 @@ namespace PatientPortal.Models
         Yes = 1,
         No = 2,
         Unknown = 3
+    }
+    public enum YesNoNotDone
+    {
+        Yes = 1,
+        No = 2,
+        [Display(Name = "Not Done")]
+        NotDone = 3,
+        Unknown = 4
     }
 
     public enum Mitoses
@@ -232,7 +267,9 @@ namespace PatientPortal.Models
         [Display(Name = "Partial response")]
         PartialResponse = 3,
         [Display(Name = "Complete response")]
-        CompleteResponse = 4
+        CompleteResponse = 4,
+        [Display(Name = "N/A")]
+        NA = 5
     }
 
     //SurgicalMargin
@@ -259,7 +296,19 @@ namespace PatientPortal.Models
         [Display(Name = "Wide Spread")]
         WideSpread = 3
     }
+    public enum SatelliteNodules
+    {
+        [Display(Name = "Identified")]
+        Identified = 1,
+        [Display(Name = "Not Identified")]
+        NotIdentified = 2
+    }
     public class SectionName
+    {
+
+
+    }
+    public class SubSectionName
     {
 
 
@@ -321,7 +370,7 @@ namespace PatientPortal.Models
         public string BxReport { get; set; }
 
 
-        [Display(Name = "Paraffin block collected", GroupName = "Primary Dx")]
+        [Display(Name = "Paraffin block requested", GroupName = "Primary Dx")]
         public YesNo? ParaffinBlockCollectedInitialDx { get; set; }
 
         [Display(Name = "Date of Dx", GroupName = "Primary Dx")]
@@ -330,18 +379,42 @@ namespace PatientPortal.Models
         public DateTime? DxDate { get; set; }
 
         [Display(Name = "Primary Tumor Site", GroupName = "Primary Dx")] //Site of Lesion -renamed Sara
-        public LesionSite? SiteOfLesion { get; set; }
+        //public LesionSite? SiteOfLesion { get; set; } //to be changed to an open text box field
+        public string SiteOfPrimaryLesion { get; set; }
 
         [Display(Name = "Lesion Site Type", GroupName = "Primary Dx")]
         public LesionSiteType? LesionSiteType { get; set; }
 
+        //pull-down : liver lung bone brain lymph nodes (cervical), lymph nodes(axillary), lymph nodes (inguinal), lymph nodes (other), skin, other
+        [Display(Name = "Metastatic Sites at Presentation", GroupName = "Primary Dx")]
+        public SitesatPresentation? MetastaticSites { get; set; }
+
+        [Display(Name = "Primary Tumor Features", GroupName = "Primary Dx")]
+        public SectionName TestTitle22 { get; set; }
 
         [Display(Name = "Histology", GroupName = "Primary Dx")]
         public string Histology { get; set; }
 
+        [Display(Name = "Histology Type", GroupName = "Primary Dx")]
+        public string HistologyType { get; set; }
 
         [Display(Name = "Breslow Depth (mm)", GroupName = "Primary Dx")]
         public double? BreslowDepth { get; set; }
+
+        [Display(Name = "Specimen Size", GroupName = "Primary Dx")]
+        public string SpecimenSize { get; set; }
+
+        [Display(Name = "Satellite nodule(s)", GroupName = "Primary Dx")]
+        public SatelliteNodules? SatelliteNodules { get; set; }
+
+        [Display(Name = "Stage T", GroupName = "Primary Dx")]
+        public StageT? StageT { get; set; }
+
+        [Display(Name = "Stage N", GroupName = "Primary Dx")]
+        public StageN? StageN { get; set; }
+
+        [Display(Name = "Stage M", GroupName = "Primary Dx")]
+        public StageM? StageM { get; set; }
 
 
         [Display(Name = "Ulceration", GroupName = "Primary Dx")]
@@ -353,6 +426,9 @@ namespace PatientPortal.Models
         [Display(Name = "Clarks Level", GroupName = "Primary Dx")]
         public ClarksLevel? ClarksLevel { get; set; }
 
+        [Display(Name = "Clarks Level Description", GroupName = "Primary Dx")]
+        [DataType(DataType.MultilineText)]
+        public string ClarksLevelDesc { get; set; }
 
         [Display(Name = "T Stage", GroupName = "Primary Dx")]
         public TStage? TStage { get; set; }
@@ -361,10 +437,27 @@ namespace PatientPortal.Models
         [Display(Name = "LDH Level at Dx  (IU/L) ", GroupName = "Primary Dx")]
         public int? LDHLevelAtDx { get; set; }
 
+
+        //Current Melaoma Features
+ 
+        [Display(Name = "Mutation Status - BRAF", GroupName = "Primary Dx")]
+        public YesNoUnknown? MutationStatusBRAF { get; set; }
+
+        [Display(Name = "Mutation Status - NRAS", GroupName = "Primary Dx")]
+        public YesNoUnknown? MutationStatusNRAS { get; set; }
+
+        [Display(Name = "Mutation Status - CKIT", GroupName = "Primary Dx")]
+        public YesNoUnknown? MutationStatusCKIT { get; set; }
+
+
+
         [Display(Name = "Primary Surgery Date", GroupName = "Primary Dx")]
         [DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = "{0:MM/dd/yyyy}")]
         
         public DateTime? PrimarySurgeryDate { get; set; }
+
+        [Display(Name = "Primary Surgery", GroupName = "Primary Dx")]
+        public string PrimarySurgery { get; set; }
 
         // Lymph Node sub section
          [Display(Name = "Sentinel Lymph Node Biopsy", GroupName = "Primary Dx")]
@@ -488,9 +581,6 @@ namespace PatientPortal.Models
         [DataType(DataType.MultilineText)]
         public string ChronicToxicitiesAdjuvantTreatment { get; set; }
 
-        //pull-down : liver lung bone brain lymph nodes (cervical), lymph nodes(axillary), lymph nodes (inguinal), lymph nodes (other), skin, other
-        [Display(Name = "Metastatic Sites at Presentation", GroupName = "Primary Dx")]
-        public SitesatPresentation? MetastaticSites { get; set; }
         
 
         // Metastatic Disease
@@ -499,39 +589,46 @@ namespace PatientPortal.Models
         [Display(Name = "First Metastatic Dx", GroupName = "Metastatic Disease")]
         public SectionName TestTitle4 { get; set; }
 
-        [Display(Name = "First Metastatic Dx", GroupName = "Metastatic Disease")]
-        public Site2[] FirstSiteOfRecurrence { get; set; }
-
+        [Display(Name = "Site of First Metastatic Dx", GroupName = "Metastatic Disease")]
+       // public Site2[] SiteOfRecurrence1 { get; set; }
+        public string SiteOfRecurrence1 { get; set; }
 
         [Display(Name = "Date of First Metastatic Dx", GroupName = "Metastatic Disease")]
         [DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = "{0:MM/dd/yyyy}")]
-        public DateTime? FirstDateofRecurrance { get; set; }
+        public DateTime? DateofRecurrance1 { get; set; }
 
-        [Display(Name = "Treatment", GroupName = "Metastatic Disease")]
-        public int? FirstTreatmentofRecurrance { get; set; }
+        [Display(Name = "Surgery on First Metastatic Dx", GroupName = "Metastatic Disease")]
+        public SubSectionName TestTitle11 { get; set; }
 
+        [Display(Name = "Surgery?", GroupName = "Metastatic Disease")]
+        public YesNoUnknown? Surgery1 { get; set; }
 
-        [Display(Name = "Start Date of Treatment", GroupName = "Metastatic Disease")]
+        [Display(Name = "Date of surgery", GroupName = "Metastatic Disease")]
         [DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = "{0:MM/dd/yyyy}")]
-        public DateTime? FirstTreatmentStartDate { get; set; }
 
-        [Display(Name = "End Date of Treatment", GroupName = "Metastatic Disease")]
-        [DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = "{0:MM/dd/yyyy}")]
-        public DateTime? FirstTreatmentEndDate { get; set; }
+        public DateTime? SurgeryDate1 { get; set; }
 
-        [Display(Name = "Cycles", GroupName = "Metastatic Disease")]
-        public string FirstTreatmentCycles { get; set; }
+        [Display(Name = "Type of Surgery", GroupName = "Metastatic Disease")]
+        public string SurgeryType1 { get; set; }
+
+        [Display(Name = "Response to Surgery", GroupName = "Metastatic Disease")]
+        public Response? Surgery1Response { get; set; }
 
         [Display(Name = "Radiation on First Metastatic Dx", GroupName = "Metastatic Disease")]
-        public SectionName TestTitle5 { get; set; }
+        public SubSectionName TestTitle5 { get; set; }
 
         [Display(Name = "Radiation?", GroupName = "Metastatic Disease")]
-        public YesNoUnknown? FirstRadiation { get; set; }
+        public YesNoUnknown? Radiation1 { get; set; }
 
-        [Display(Name = "Date of Radiation", GroupName = "Metastatic Disease")]
+        [Display(Name = "Start Date of Radiation", GroupName = "Metastatic Disease")]
         [DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = "{0:MM/dd/yyyy}")]
 
-        public DateTime? Radiation1Date { get; set; }
+        public DateTime? Radiation1StartDate { get; set; }
+
+        [Display(Name = "End Date of Radiation", GroupName = "Metastatic Disease")]
+        [DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = "{0:MM/dd/yyyy}")]
+
+        public DateTime? Radiation1EndDate { get; set; }
 
         [Display(Name = "Type of Radiation", GroupName = "Metastatic Disease")]
         [DataType(DataType.MultilineText)]
@@ -543,6 +640,199 @@ namespace PatientPortal.Models
 
         [Display(Name = "Amount of Radiation (cGy)", GroupName = "Metastatic Disease")]
         public int? Radiation1Amount { get; set; }
+
+        [Display(Name = "Response to Radiation", GroupName = "Metastatic Disease")]
+        public YesNoUnknown? Radiation1Response { get; set; }
+
+        [Display(Name = "Type of Response", GroupName = "Metastatic Disease")]
+        public string Radiation1ResponseType { get; set; }
+
+        [Display(Name = "Systemic Treatment on First Metastatic Dx", GroupName = "Metastatic Disease")]
+        public SubSectionName TestTitle12 { get; set; }
+
+        [Display(Name = "Treatment", GroupName = "Metastatic Disease")]
+        public string TreatmentofRecurrance1 { get; set; }
+
+
+        [Display(Name = "Start Date of Treatment", GroupName = "Metastatic Disease")]
+        [DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = "{0:MM/dd/yyyy}")]
+        public DateTime? TreatmentofRecurrance1StartDate { get; set; }
+
+        [Display(Name = "End Date of Treatment", GroupName = "Metastatic Disease")]
+        [DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = "{0:MM/dd/yyyy}")]
+        public DateTime? TreatmentofRecurrance1EndDate { get; set; }
+
+        [Display(Name = "Cycles", GroupName = "Metastatic Disease")]
+        public string TreatmentofRecurrance1Cycles { get; set; }
+
+        [Display(Name = "Response to Treatment", GroupName = "Metastatic Disease")]
+        public Response? TreatmentofRecurrance1ClinicalTrialResponse { get; set; }
+
+        //Second Mets
+        [Display(Name = "Progression1 of Metastatic Dx", GroupName = "Metastatic Disease")]
+        public SectionName TestTitle13 { get; set; }
+
+        [Display(Name = "Site of Progression 1" , GroupName = "Metastatic Disease")]
+        //public Site2[] SiteOfRecurrence2 { get; set; }
+        public string SiteOfRecurrence2 { get; set; }
+
+        [Display(Name = "Date of Progresion1 Metastatic Dx", GroupName = "Metastatic Disease")]
+        [DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = "{0:MM/dd/yyyy}")]
+        public DateTime? DateofRecurrance2 { get; set; }
+
+        [Display(Name = "Surgery on Progression1 Metastatic Dx", GroupName = "Metastatic Disease")]
+        public SubSectionName TestTitle14 { get; set; }
+
+        [Display(Name = "Surgery?", GroupName = "Metastatic Disease")]
+        public YesNoUnknown? Surgery2 { get; set; }
+
+        [Display(Name = "Date of surgery", GroupName = "Metastatic Disease")]
+        [DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = "{0:MM/dd/yyyy}")]
+
+        public DateTime? Surgery2Date { get; set; }
+
+        [Display(Name = "Type of Surgery", GroupName = "Metastatic Disease")]
+        public string Surgery2Type { get; set; }
+
+        [Display(Name = "Response to Surgery", GroupName = "Metastatic Disease")]
+        public Response? Surgery2Response { get; set; }
+
+        [Display(Name = "Radiation on Progression1 Metastatic Dx", GroupName = "Metastatic Disease")]
+        public SubSectionName TestTitle16 { get; set; }
+
+        [Display(Name = "Radiation?", GroupName = "Metastatic Disease")]
+        public YesNoUnknown? Radiation2 { get; set; }
+
+        [Display(Name = "Start Date of Radiation", GroupName = "Metastatic Disease")]
+        [DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = "{0:MM/dd/yyyy}")]
+
+        public DateTime? Radiation2StartDate { get; set; }
+
+        [Display(Name = "End Date of Radiation", GroupName = "Metastatic Disease")]
+        [DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = "{0:MM/dd/yyyy}")]
+
+        public DateTime? Radiation2EndDate { get; set; }
+
+        [Display(Name = "Type of Radiation", GroupName = "Metastatic Disease")]
+        [DataType(DataType.MultilineText)]
+        public string Radiation2Type { get; set; }
+
+        [Display(Name = "Location of Radiation", GroupName = "Metastatic Disease")]
+        [DataType(DataType.MultilineText)]
+        public string Radiation2Location { get; set; }
+
+        [Display(Name = "Amount of Radiation (cGy)", GroupName = "Metastatic Disease")]
+        public int? Radiation2Amount { get; set; }
+
+        [Display(Name = "Response to Radiation", GroupName = "Metastatic Disease")]
+        public YesNoUnknown? Radiation2Response { get; set; }
+
+        [Display(Name = "Type of Response", GroupName = "Metastatic Disease")]
+        public string Radiation2ResponseType { get; set; }
+
+        [Display(Name = "Systemic Treatment on Progression1 Metastatic Dx", GroupName = "Metastatic Disease")]
+        public SubSectionName TestTitle15 { get; set; }
+
+        [Display(Name = "Treatment", GroupName = "Metastatic Disease")]
+        public string TreatmentofRecurrance2 { get; set; }
+
+
+        [Display(Name = "Start Date of Treatment", GroupName = "Metastatic Disease")]
+        [DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = "{0:MM/dd/yyyy}")]
+        public DateTime? TreatmentofRecurrance2StartDate { get; set; }
+
+        [Display(Name = "End Date of Treatment", GroupName = "Metastatic Disease")]
+        [DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = "{0:MM/dd/yyyy}")]
+        public DateTime? TreatmentofRecurrance2EndDate { get; set; }
+
+        [Display(Name = "Cycles", GroupName = "Metastatic Disease")]
+        public string TreatmentofRecurrance2Cycles { get; set; }
+
+        [Display(Name = "Response to Treatment", GroupName = "Metastatic Disease")]
+        public Response? TreatmentofRecurrance2ClinicalTrialResponse { get; set; }
+
+        //third Mets
+        [Display(Name = "Progression2 of Metastatic Dx", GroupName = "Metastatic Disease")]
+        public SectionName TestTitle17 { get; set; }
+
+        [Display(Name = "Site of Progression2", GroupName = "Metastatic Disease")]
+       // public Site2[] SiteOfRecurrence3 { get; set; }
+        public string SiteOfRecurrence3 { get; set; }
+
+        [Display(Name = "Date of  Progression2 Metastatic Dx", GroupName = "Metastatic Disease")]
+        [DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = "{0:MM/dd/yyyy}")]
+        public DateTime? DateofRecurrance3 { get; set; }
+
+        [Display(Name = "Surgery on Progression2 Metastatic Dx", GroupName = "Metastatic Disease")]
+        public SubSectionName TestTitle18 { get; set; }
+
+        [Display(Name = "Surgery?", GroupName = "Metastatic Disease")]
+        public YesNoUnknown? Surgery3 { get; set; }
+
+        [Display(Name = "Date of surgery", GroupName = "Metastatic Disease")]
+        [DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = "{0:MM/dd/yyyy}")]
+
+        public DateTime? Surgery3Date { get; set; }
+
+        [Display(Name = "Type of Surgery", GroupName = "Metastatic Disease")]
+        public string Surgery3Type { get; set; }
+
+        [Display(Name = "Response to Surgery", GroupName = "Metastatic Disease")]
+        public Response? Surgery3Response { get; set; }
+
+        [Display(Name = "Radiation on Progression2 Metastatic Dx", GroupName = "Metastatic Disease")]
+        public SubSectionName TestTitle19 { get; set; }
+
+        [Display(Name = "Radiation?", GroupName = "Metastatic Disease")]
+        public YesNoUnknown? Radiation3 { get; set; }
+
+        [Display(Name = "Start Date of Radiation", GroupName = "Metastatic Disease")]
+        [DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = "{0:MM/dd/yyyy}")]
+
+        public DateTime? Radiation3StartDate { get; set; }
+
+        [Display(Name = "End Date of Radiation", GroupName = "Metastatic Disease")]
+        [DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = "{0:MM/dd/yyyy}")]
+
+        public DateTime? Radiation3EndDate { get; set; }
+
+        [Display(Name = "Type of Radiation", GroupName = "Metastatic Disease")]
+        [DataType(DataType.MultilineText)]
+        public string Radiation3Type { get; set; }
+
+        [Display(Name = "Location of Radiation", GroupName = "Metastatic Disease")]
+        [DataType(DataType.MultilineText)]
+        public string Radiation3Location { get; set; }
+
+        [Display(Name = "Amount of Radiation (cGy)", GroupName = "Metastatic Disease")]
+        public int? Radiation3Amount { get; set; }
+
+        [Display(Name = "Response to Radiation", GroupName = "Metastatic Disease")]
+        public YesNoUnknown? Radiation3Response { get; set; }
+
+        [Display(Name = "Type of Response", GroupName = "Metastatic Disease")]
+        public string Radiation3ResponseType { get; set; } 
+
+        [Display(Name = "Systemic Treatment on Progression2 Metastatic Dx", GroupName = "Metastatic Disease")]
+        public SubSectionName TestTitle20 { get; set; }
+
+        [Display(Name = "Treatment", GroupName = "Metastatic Disease")]
+        public string TreatmentofRecurrance3 { get; set; }
+
+
+        [Display(Name = "Start Date of Treatment", GroupName = "Metastatic Disease")]
+        [DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = "{0:MM/dd/yyyy}")]
+        public DateTime? TreatmentofRecurrance3StartDate { get; set; }
+
+        [Display(Name = "End Date of Treatment", GroupName = "Metastatic Disease")]
+        [DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = "{0:MM/dd/yyyy}")]
+        public DateTime? TreatmentofRecurrance3EndDate { get; set; }
+
+        [Display(Name = "Cycles", GroupName = "Metastatic Disease")]
+        public string TreatmentofRecurrance3Cycles { get; set; }
+
+        [Display(Name = "Response to Treatment", GroupName = "Metastatic Disease")]
+        public Response? TreatmentofRecurrance3ClinicalTrialResponse { get; set; }
 
         //same sites (brain, lung, liver ... ) like metastatic sites
     /*    [Display(Name = "Sites of recurrence", GroupName = "Metastatic Disease")]
@@ -782,10 +1072,10 @@ namespace PatientPortal.Models
         //section urinalysis
 
         [Display(Name = "Proteinuria", GroupName = "Current Presentation")]
-        public YesNo? Proteinuria { get; set; }
+        public YesNoNotDone? Proteinuria { get; set; }
 
         [Display(Name = "Hematuria", GroupName = "Current Presentation")]
-        public YesNo? Hematuria { get; set; }
+        public YesNoNotDone? Hematuria { get; set; }
 
 
         //Physical Exam
@@ -804,16 +1094,21 @@ namespace PatientPortal.Models
         [DataType(DataType.MultilineText)]
         public string PhysicalExamGeneral { get; set; }
 
+        //Vital Signs
+        [Display(Name = "Vital Signs", GroupName = "Current Presentation")]
+        public SectionName TestTitle21 { get; set; }
 
-        //Current Melaoma Features
-        [Display(Name = "Mutation Status - BRAF", GroupName = "Current Presentation")]
-        public YesNoUnknown? MutationStatusBRAF { get; set; }
+        [Display(Name = "Blood Pressure", GroupName = "Current Presentation")]
+        public string BloodPressure { get; set; }
 
-        [Display(Name = "Mutation Status - NRAS", GroupName = "Current Presentation")]
-        public YesNoUnknown? MutationStatusNRAS { get; set; }
+        [Display(Name = "Pulse", GroupName = "Current Presentation")]
+        public string Pulse { get; set; }
 
-        [Display(Name = "Mutation Status - CKIT", GroupName = "Current Presentation")]
-        public YesNoUnknown? MutationStatusCKIT { get; set; }
+        [Display(Name = "Respiratory Rate", GroupName = "Current Presentation")]
+        public string RespiratoryRate { get; set; }
+
+        [Display(Name = "Temperature", GroupName = "Current Presentation")]
+        public string Temperature { get; set; }
 
 
 
