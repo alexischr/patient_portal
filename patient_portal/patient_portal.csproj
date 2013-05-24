@@ -382,6 +382,7 @@
     <None Include="Properties\PublishProfiles\GEMM.pubxml" />
     <None Include="Properties\PublishProfiles\GemmPublish.pubxml" />
     <None Include="Properties\PublishProfiles\ngd-data.pubxml" />
+    <None Include="Properties\PublishProfiles\su2c-test.pubxml" />
     <None Include="Scripts\jquery-1.7.1.intellisense.js" />
     <Content Include="Scripts\DataTables\extras\TableTools\media\js\ZeroClipboard.js" />
     <Content Include="Scripts\DataTables\media\js\jquery.dataTables.js" />

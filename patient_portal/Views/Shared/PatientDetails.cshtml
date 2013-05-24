@@ -49,6 +49,10 @@
                         {
                                 <div class="subsection">@Html.Label("Patient" + "." + property.PropertyName) </div>
                         }
+                        else  if (property.ModelType.Name == "SubSectionName")
+                        {
+                                <div class="subsubsection">@Html.Label("Patient" + "." + property.PropertyName) </div>
+                        }
                         else {
                         @Html.Label(property.DisplayName ?? property.PropertyName)
                     }

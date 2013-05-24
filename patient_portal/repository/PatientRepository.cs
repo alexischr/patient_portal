@@ -19,7 +19,7 @@ namespace PatientPortal.BackEnd
         private MongoCollection _patients;
         private MongoGridFS _gridFS;
 
-        const string _DBNAME = "su2c_test";
+        const string _DBNAME = "su2c";
 
         public PatientModel GetPatient(string id)
         {
