@@ -449,7 +449,9 @@ namespace PatientPortal.Models
         [Display(Name = "Mutation Status - CKIT", GroupName = "Primary Dx")]
         public YesNoUnknown? MutationStatusCKIT { get; set; }
 
-
+        [Display(Name = "Mutation Status Comments", GroupName = "Primary Dx")]
+        [DataType(DataType.MultilineText)]
+        public string MutationStatusComments { get; set; }
 
         [Display(Name = "Primary Surgery Date", GroupName = "Primary Dx")]
         [DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = "{0:MM/dd/yyyy}")]
@@ -1110,6 +1112,14 @@ namespace PatientPortal.Models
         [Display(Name = "Temperature", GroupName = "Current Presentation")]
         public string Temperature { get; set; }
 
+        //pathReport
+        //Vital Signs
+        [Display(Name = "Pathology Report", GroupName = "Current Presentation")]
+        public SectionName TestTitle23 { get; set; }
+
+        [Display(Name = "Pathology Report", GroupName = "Current Presentation")]
+        [DataType(DataType.MultilineText)]
+        public string PathologyReport { get; set; }
 
 
         public PatientModel()
