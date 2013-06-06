@@ -187,6 +187,7 @@
     <Content Include="assets\images\SU2C_2_onWhite.jpg" />
     <Content Include="assets\images\tgen_logo.png" />
     <Content Include="assets\images\tgen_bg.png" />
+    <Content Include="assets\images\ucsf.jpg" />
     <Content Include="assets\js\jquery.editinplace.js" />
     <Content Include="assets\js\jquery.simplemodal.js" />
     <Content Include="assets\logo.gif" />
