@@ -20,6 +20,7 @@ namespace PatientPortal.BackEnd
         private MongoGridFS _gridFS;
 
         const string _DBNAME = "su2c";
+        const string _SERVERNAME = "i2-ft2.tgen.org";
 
         public PatientModel GetPatient(string id)
         {
@@ -28,7 +29,7 @@ namespace PatientPortal.BackEnd
 
         public Repository()
         {
-            _server = new MongoServer(new MongoServerSettings { Server = new MongoServerAddress("localhost"), SafeMode = SafeMode.True });
+            _server = new MongoServer(new MongoServerSettings { Server = new MongoServerAddress(_SERVERNAME), SafeMode = SafeMode.True });
 
             //patients
             _patients = _server.GetDatabase(_DBNAME).GetCollection<PatientModel>("patients");
