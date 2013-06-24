@@ -836,6 +836,12 @@ namespace PatientPortal.Models
         [Display(Name = "Response to Treatment", GroupName = "Metastatic Disease")]
         public Response? TreatmentofRecurrance3ClinicalTrialResponse { get; set; }
 
+        [Display(Name = "Other Treatments", GroupName = "Metastatic Disease")]
+        public SectionName TestTitle33 { get; set; }
+
+        [Display(Name = "Any Other Treatments or Regimens", GroupName = "Metastatic Disease")]
+        [DataType(DataType.MultilineText)]
+        public string MoreTreatments { get; set; }
         //same sites (brain, lung, liver ... ) like metastatic sites
     /*    [Display(Name = "Sites of recurrence", GroupName = "Metastatic Disease")]
         public Site2[] SitesOfRecurrence { get; set; }

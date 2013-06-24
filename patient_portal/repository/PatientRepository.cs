@@ -28,7 +28,7 @@ namespace PatientPortal.BackEnd
 
         public Repository()
         {
-            _server = new MongoServer(new MongoServerSettings { Server = new MongoServerAddress("spock.tgen.org"), SafeMode = SafeMode.True });
+            _server = new MongoServer(new MongoServerSettings { Server = new MongoServerAddress("leeloo.tgen.org"), SafeMode = SafeMode.True });
 
             //patients
             _patients = _server.GetDatabase(_DBNAME).GetCollection<PatientModel>("patients");
