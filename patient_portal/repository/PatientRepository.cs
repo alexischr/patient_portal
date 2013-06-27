@@ -1,18 +1,17 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
+﻿using MongoDB.Bson;
 using MongoDB.Driver;
+using MongoDB.Driver.Builders;
 using MongoDB.Driver.GridFS;
 using PatientPortal.Models;
-using MongoDB.Driver.Builders;
-using MongoDB.Bson;
+using System;
+using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 
 namespace PatientPortal.BackEnd
 {
 
-    public class Repository
+    public class PatientRepository
     {
         private MongoServer _server;
         private MongoDatabase _db;
@@ -26,7 +25,7 @@ namespace PatientPortal.BackEnd
             return _patients.FindOneAs<PatientModel>(Query.EQ("_id", id));
         }
 
-        public Repository()
+        public PatientRepository()
         {
             _server = new MongoServer(new MongoServerSettings { Server = new MongoServerAddress("localhost"), SafeMode = SafeMode.True });
 

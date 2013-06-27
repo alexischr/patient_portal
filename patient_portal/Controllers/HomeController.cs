@@ -1,24 +1,20 @@
-﻿using System;
+﻿using MongoDB.Bson;
+using PatientPortal.BackEnd;
+using PatientPortal.Models;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
+using System.IO;
 using System.Linq;
+using System.Reflection;
 using System.Web;
 using System.Web.Mvc;
-using Aspose.Slides;
-using System.IO;
-using System.Drawing;
-using Aspose.Slides.Pptx;
-using PatientPortal.Models;
-using PatientPortal.BackEnd;
-using MongoDB.Bson;
-using System.Reflection;
-using System.ComponentModel.DataAnnotations;
 
 namespace PatientPortal.Controllers
 {
     [Authorize]
     public class HomeController : Controller
     {
-        private Repository _repository = new Repository();
+        private PatientRepository _repository = new PatientRepository();
 
         [HttpGet]
         [Authorize]

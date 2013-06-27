@@ -1,12 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Transactions;
-using System.Web;
+﻿using PatientPortal.Models;
+using System;
 using System.Web.Mvc;
 using System.Web.Security;
-using WebMatrix.WebData;
-using PatientPortal.Models;
 
 namespace PatientPortal.Controllers
 {
