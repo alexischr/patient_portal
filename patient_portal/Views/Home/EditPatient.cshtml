@@ -1,0 +1,251 @@
+﻿@using PatientPortal.Utility
+@model PatientPortal.Models.PatientViewModel
+<script src="~/Content/js/jquery.filedrop.js"></script>
+@{
+    var tabs = new HashSet<string>();
+    var fields = new Dictionary<string, List<ModelMetadata>>();
+
+    foreach (var property in ViewData.ModelMetadata.Properties)
+    {
+        if (property.PropertyName != "Files" && property.PropertyName != "ID")
+        {
+            foreach (var subprop in property.Properties)
+            {
+                if (subprop.PropertyName != "ID" && subprop.GetGroupName() != null)
+                {
+                    if (!fields.ContainsKey(subprop.GetGroupName()))
+                    {
+                        fields[subprop.GetGroupName()] = new List<ModelMetadata>();
+                    }
+
+
+                    fields[subprop.GetGroupName()].Add(subprop);
+                    tabs.Add(subprop.GetGroupName());
+                }
+            }
+        }
+    }
+   
+}
+@using (Html.BeginForm())
+{
+
+<div id="patient_details">
+    <h2>@Model.Patient.ID</h2>
+    @Html.HiddenFor(model => model.Patient.ID)
+    <div id="tabs">
+    <ul>
+        @foreach (var tab in tabs)
+        {
+         <li><a href="#tabs-@tab">@tab</a></li>
+        }
+    </ul>
+        @foreach (var tab in tabs)
+        {
+            <div id="tabs-@tab">
+                    @foreach (var property in fields[tab])
+                    {
+                        if (property.ModelType.Name == "SectionName")
+                        {
+                                <div class="subsection">@Html.Label("Patient" + "." + property.PropertyName) </div>
+                        }
+                        else  if (property.ModelType.Name == "SubSectionName")
+                        {
+                                <div class="subsubsection">@Html.Label("Patient" + "." + property.PropertyName) </div>
+                        }
+                        else {
+                        @Html.Label(property.DisplayName ?? property.PropertyName)
+                    }
+
+                        var full_name = String.Concat("Patient" + "." + property.PropertyName);
+
+                        if (Model.Patient.Locked)
+                        {
+                            @Html.Display(full_name)
+                        }
+                        else
+                        {
+                            
+                            @Html.ValidationMessage(full_name)
+
+                            var nullable = Nullable.GetUnderlyingType(property.ModelType);
+
+                            if (property.ModelType.IsEnum || (nullable != null && nullable.IsEnum))
+                            {
+                                @Html.EnumDropDownList(property, full_name, null)
+                            }
+                            else if (property.ModelType.IsArray)
+                            {
+                                @Html.EnumMultipleList(property, full_name, null)
+                            }
+                            else if (property.ModelType.Name == "SectionName")
+                            {
+                                
+                            }
+                            else
+                            {
+                             @Html.Editor("Patient" + "." + property.PropertyName)
+                            }
+                        }
+                    }
+            </div>
+        }
+
+</div>
+    
+
+    </div>
+<div id="patient_form">
+    @Html.ValidationSummary(true)
+    <p></p>
+    <div id="savechanges" class="button"><input type="submit" value="Save Changes" /></div>
+    @if (!Model.Patient.Locked)
+    {
+        <div class="fixedbutton_disabled" id="lock" data-patientid="@Model.Patient.ID"><a>Lock Details</a></div>
+    }
+    <div class="fixedbutton" id="delete" data-patientid="@Model.Patient.ID"><a href="Home/PatientDelete?id=@Model.Patient.ID">Delete Patient</a></div>
+   @* <button class="fixedbutton" id="lock_button">Lock changes</button>
+    <button class="fixedbutton" id="delete_button">Delete Patient</button>*@
+</div>
+
+    @*
+<div id="patient_files">
+    <h3>Files</h3>
+    @if (Model.Files.Count == 0)
+    {
+        <p>No files are stored for this patient.</p>
+    }
+        
+     @foreach (var filemodel in Model.Files)
+     {
+       <div class="fixedbutton">@Html.ActionLink(filemodel.Filename, "Download", new { id = filemodel.ID })</div>
+     }
+</div> *@
+
+<div id="patient_generation">
+    <h3>Report Generation</h3>
+    <div class="fixedbutton">@Html.ActionLink("Presentation", "PPT", new { id = Model.Patient.ID })</div>
+    <div class="fixedbutton_disabled"><a>Genomic Report</a></div>
+</div>
+}
+
+@Scripts.Render("~/bundles/jqueryval")
+    
+    <script>
+        $(function () {
+            $('#tabs').tabs();
+            //$('#Patient_Date').datepicker();
+
+            $("*[id$='Date']").each(function () {
+                $(this).datepicker();
+            })
+        });
+        //$(function () {
+
+        function dropify(id) {
+
+            var dropbox = $('#' + id + '_dropbox'),
+                message = $('.message', dropbox);
+
+            dropbox.filedrop({
+                // The name of the $_FILES entry:
+                paramname: 'files',
+
+                maxfiles: 2,
+                maxfilesize: 2,
+                url: '/Home/UploadFiles/?id=' + id,
+
+                uploadFinished: function (i, file, response) {
+                    $.data(file).addClass('done');
+                    // response is the JSON object that post_file.php returns
+                },
+
+                error: function (err, file) {
+                    switch (err) {
+                        case 'BrowserNotSupported':
+                            showMessage('Your browser does not support HTML5 file uploads!');
+                            break;
+                        case 'TooManyFiles':
+                            alert('Too many files! Please select 5 at most! (configurable)');
+                            break;
+                        case 'FileTooLarge':
+                            alert(file.name + ' is too large! Please upload files up to 2mb (configurable).');
+                            break;
+                        default:
+                            break;
+                    }
+                },
+
+                // Called before each upload is started
+                beforeEach: function (file) {
+                    if (!file.type.match(/^image\//)) {
+                        alert('Only images are allowed!');
+
+                        // Returning false will cause the
+                        // file to be rejected
+                        return false;
+                    }
+                },
+
+                uploadStarted: function (i, file, len) {
+                    createImage(file);
+                },
+
+                progressUpdated: function (i, file, progress) {
+                    $.data(file).find('.progress').width(progress);
+                }
+
+            });
+
+            var template = '<div class="preview">' +
+                                '<span class="imageHolder">' +
+                                    '<img />' +
+                                    '<span class="uploaded"></span>' +
+                                '</span>' +
+                                '<div class="progressHolder">' +
+                                    '<div class="progress"></div>' +
+                                '</div>' +
+                            '</div>';
+
+
+            function createImage(file) {
+
+                var preview = $(template),
+                    image = $('img', preview);
+
+                var reader = new FileReader();
+
+                image.width = 100;
+                image.height = 100;
+
+                reader.onload = function (e) {
+
+                    // e.target.result holds the DataURL which
+                    // can be used as a source of the image:
+
+                    image.attr('src', e.target.result);
+                };
+
+                // Reading the file as a DataURL. When finished,
+                // this will trigger the onload function above:
+                reader.readAsDataURL(file);
+
+                message.hide();
+                preview.appendTo(dropbox);
+
+                // Associating a preview container
+                // with the file, using jQuery's $.data():
+
+                $.data(file, preview);
+            }
+
+            function showMessage(msg) {
+                message.html(msg);
+            }
+        };
+        $(function () {
+            dropify("patient_files");
+        });
+
+        //});
+        </script>

@@ -5,6 +5,7 @@ using MongoDB.Driver.GridFS;
 using PatientPortal.Models;
 using System;
 using System.Collections.Generic;
+using System.Configuration;
 using System.IO;
 using System.Linq;
 
@@ -18,7 +19,9 @@ namespace PatientPortal.BackEnd
         private MongoCollection _patients;
         private MongoGridFS _gridFS;
 
-        const string _DBNAME = "su2c";
+        readonly string _DBNAME = ConfigurationSettings.AppSettings["dbname"];
+        readonly string _DBHOST = ConfigurationSettings.AppSettings["dbhost"];
+
 
         public PatientModel GetPatient(string id)
         {

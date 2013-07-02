@@ -77,6 +77,29 @@ namespace PatientPortal.Controllers
         }
 
         [HttpGet]
+        public ActionResult EditPatient(string id)
+        {
+            var model = _repository.GetPatientWithFiles(id);
+            return PartialView(model);
+        }
+
+        [HttpPost]
+        public ActionResult EditPatient(PatientViewModel model)
+        {
+            if (ModelState.IsValid)
+            {
+                _repository.UpdatePatient(model);
+                return RedirectToAction("Index");
+            }
+            //return View(model); 
+            //TODO: Return properly with model errors (needs to be submitted with AJAX in dialog
+            return RedirectToAction("Index");
+        }
+
+
+
+
+        [HttpGet]
         public ActionResult PatientDelete(string id)
         {
             _repository.DeletePatient(id);

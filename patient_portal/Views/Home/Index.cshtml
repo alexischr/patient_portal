@@ -6,9 +6,13 @@
 <div class="button" id="addpatient"><a>Add Patient</a></div>
     <h2>Patients</h2>
     </div>
-    @foreach (var viewmodel in Model)
-    {
-        <div class="patients" id="@viewmodel.Patient.ID"><img src="assets/images/karmanos.jpg" /><a>@viewmodel.Patient.ID</a></div>
+    @foreach (var viewmodel in Model) {
+        <div class="patients" id="@viewmodel.Patient.ID">
+            @using (Html.BeginForm("EditPatient", "Home", FormMethod.Post, new { id = viewmodel.Patient.ID }))
+            {                                       
+                 <img src="assets/images/karmanos.jpg" /><a>@viewmodel.Patient.ID</a>
+            }
+            </div>
     }
 
 <div id="dialog" style="display: none"></div>
@@ -25,7 +29,7 @@
             var idz = $(this).closest(".patients").attr("id");
             //load up 
 
-                $.get("Home/PatientDetails", $.param({ id: idz }, true), function (data, status, XHR) {
+                $.post("Home/EditPatient", $.param({ id: idz }, true), function (data, status, XHR) {
                     $("#dialog").html(data);
                     $("#dialog").dialog({
                         modal: true, draggable: false, width: '800px', resizable: false, position: ['middle', 20]
