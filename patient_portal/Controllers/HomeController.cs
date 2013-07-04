@@ -16,6 +16,8 @@ namespace PatientPortal.Controllers
     {
         private PatientRepository _repository = new PatientRepository();
 
+        const string _PPTGENDIR = "target";
+
         [HttpGet]
         [Authorize]
         public ActionResult Index()
@@ -80,7 +82,7 @@ namespace PatientPortal.Controllers
         public ActionResult EditPatient(string id)
         {
             var model = _repository.GetPatientWithFiles(id);
-            return PartialView(model);
+            return View(model);
         }
 
         [HttpPost]
@@ -128,7 +130,7 @@ namespace PatientPortal.Controllers
             var filemodel = new FileModel();
             filemodel.ID = ObjectId.Parse(id);
 
-            var fs = new FileStreamResult(_repository.DownloadFile(ref filemodel), " application/octet-stream");
+            var fs = new FileStreamResult(_repository.DownloadFile(filemodel), " application/octet-stream");
             fs.FileDownloadName = filemodel.Filename;
             return fs;
         }
@@ -167,6 +169,12 @@ namespace PatientPortal.Controllers
 
         public ActionResult PPT(string id)
         {
+            var patient = _repository.GetPatient(id);
+            var bin = "pptx.jar";
+            var resource_path = "/ngd/data";
+
+
+
             return Process(_repository.GetPatient(id));
         }
 

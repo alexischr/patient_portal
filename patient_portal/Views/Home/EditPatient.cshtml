@@ -101,7 +101,7 @@
     <div id="savechanges" class="button"><input type="submit" value="Save Changes" /></div>
     @if (!Model.Patient.Locked)
     {
-        <div class="fixedbutton_disabled" id="lock" data-patientid="@Model.Patient.ID"><a>Lock Details</a></div>
+
     }
     <div class="fixedbutton" id="delete" data-patientid="@Model.Patient.ID"><a href="Home/PatientDelete?id=@Model.Patient.ID">Delete Patient</a></div>
    @* <button class="fixedbutton" id="lock_button">Lock changes</button>
@@ -125,7 +125,6 @@
 <div id="patient_generation">
     <h3>Report Generation</h3>
     <div class="fixedbutton">@Html.ActionLink("Presentation", "PPT", new { id = Model.Patient.ID })</div>
-    <div class="fixedbutton_disabled"><a>Genomic Report</a></div>
 </div>
 }
 

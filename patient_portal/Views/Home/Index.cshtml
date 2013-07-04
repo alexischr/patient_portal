@@ -8,10 +8,7 @@
     </div>
     @foreach (var viewmodel in Model) {
         <div class="patients" id="@viewmodel.Patient.ID">
-            @using (Html.BeginForm("EditPatient", "Home", FormMethod.Post, new { id = viewmodel.Patient.ID }))
-            {                                       
-                 <img src="assets/images/karmanos.jpg" /><a>@viewmodel.Patient.ID</a>
-            }
+                 <a href="/Home/EditPatient?id=@viewmodel.Patient.ID"><img src="assets/images/karmanos.jpg" />@viewmodel.Patient.ID</a>
             </div>
     }
 
@@ -29,15 +26,6 @@
             var idz = $(this).closest(".patients").attr("id");
             //load up 
 
-                $.post("Home/EditPatient", $.param({ id: idz }, true), function (data, status, XHR) {
-                    $("#dialog").html(data);
-                    $("#dialog").dialog({
-                        modal: true, draggable: false, width: '800px', resizable: false, position: ['middle', 20]
-                    });
-
-                    $("#dialog").dialog('option', 'position', ['middle', 20]);
-
-                });
 
         });
 
