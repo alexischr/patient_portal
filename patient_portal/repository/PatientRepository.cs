@@ -19,8 +19,8 @@ namespace PatientPortal.BackEnd
         private MongoCollection _patients;
         private MongoGridFS _gridFS;
 
-        readonly string _DBNAME = ConfigurationSettings.AppSettings["dbname"];
-        readonly string _DBHOST = ConfigurationSettings.AppSettings["dbhost"];
+        readonly string _DBNAME = ConfigurationManager.AppSettings["dbname"];
+        readonly string _DBHOST = ConfigurationManager.AppSettings["dbhost"];
 
 
         public PatientModel GetPatient(string id)
@@ -69,7 +69,7 @@ namespace PatientPortal.BackEnd
         {
             var result =_patients.Insert<PatientModel>(patient);
             if (result.ErrorMessage != null)
-                throw new Exception("Problem insterting document");
+                throw new Exception("Problem inserting document");
         }
 
         public IEnumerable<FileModel> GetFilesForPatient(PatientModel patient)
