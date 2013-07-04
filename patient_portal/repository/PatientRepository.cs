@@ -30,7 +30,7 @@ namespace PatientPortal.BackEnd
 
         public PatientRepository()
         {
-            _server = new MongoServer(new MongoServerSettings { Server = new MongoServerAddress("leeloo.tgen.org"), SafeMode = SafeMode.True });
+            _server = new MongoServer(new MongoServerSettings { Server = new MongoServerAddress(_DBHOST), SafeMode = SafeMode.True });
 
             //patients
             _patients = _server.GetDatabase(_DBNAME).GetCollection<PatientModel>("patients");
@@ -93,14 +93,25 @@ namespace PatientPortal.BackEnd
             return file_model;
         }
 
-        public Stream DownloadFile(ref FileModel file)
+        public Stream DownloadReport(string patient_id)
         {
-            var result = _gridFS.FindOneById(file.ID);
+            return DownloadFile(new FileModel { PatientID = patient_id, Filename = "genomic_report.pptx" });
+        }
+
+
+        public FileModel UploadReport(Stream data, string patient_id)
+        {
+            return UploadFile(data, new FileModel { PatientID = patient_id, Filename = "genomic_report.pptx" });
+        }
+
+        public Stream DownloadFile(FileModel file)
+        {
+            var result = _gridFS.FindOne( Query.And(
+                        Query.EQ("PatientID", file.PatientID), Query.EQ("Filename", file.Filename)
+                        ));
 
             if (result == null)
                 throw new Exception("Could not find file by that ID.");
-
-            file.Filename = result.Name;
 
             return result.OpenRead();
         }

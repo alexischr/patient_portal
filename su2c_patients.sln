@@ -13,13 +13,16 @@ EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
-		Release|Any CPU = Release|Any CPU
+		GEMM-production|Any CPU = GEMM-production|Any CPU
+		GEMM-test|Any CPU = GEMM-test|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
 		{A07A8E59-8276-467F-8CF0-6F7C5DBBF2B4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{A07A8E59-8276-467F-8CF0-6F7C5DBBF2B4}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{A07A8E59-8276-467F-8CF0-6F7C5DBBF2B4}.Release|Any CPU.ActiveCfg = GEMM(production)|Any CPU
-		{A07A8E59-8276-467F-8CF0-6F7C5DBBF2B4}.Release|Any CPU.Build.0 = GEMM(production)|Any CPU
+		{A07A8E59-8276-467F-8CF0-6F7C5DBBF2B4}.GEMM-production|Any CPU.ActiveCfg = GEMM-production|Any CPU
+		{A07A8E59-8276-467F-8CF0-6F7C5DBBF2B4}.GEMM-production|Any CPU.Build.0 = GEMM-production|Any CPU
+		{A07A8E59-8276-467F-8CF0-6F7C5DBBF2B4}.GEMM-test|Any CPU.ActiveCfg = GEMM-test|Any CPU
+		{A07A8E59-8276-467F-8CF0-6F7C5DBBF2B4}.GEMM-test|Any CPU.Build.0 = GEMM-test|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
