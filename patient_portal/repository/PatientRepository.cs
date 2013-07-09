@@ -22,7 +22,6 @@ namespace PatientPortal.BackEnd
         readonly string _DBNAME = ConfigurationManager.AppSettings["dbname"];
         readonly string _DBHOST = ConfigurationManager.AppSettings["dbhost"];
 
-
         public PatientModel GetPatient(string id)
         {
             return _patients.FindOneAs<PatientModel>(Query.EQ("_id", id));

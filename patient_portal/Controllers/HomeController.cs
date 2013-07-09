@@ -2,7 +2,9 @@
 using PatientPortal.BackEnd;
 using PatientPortal.Models;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.ComponentModel.DataAnnotations;
+using System.Configuration;
 using System.IO;
 using System.Linq;
 using System.Reflection;
@@ -170,12 +172,23 @@ namespace PatientPortal.Controllers
         public ActionResult PPT(string id)
         {
             var patient = _repository.GetPatient(id);
-            var bin = "pptx.jar";
-            var resource_path = "/ngd/data";
+            var bin = ConfigurationManager.AppSettings["reportgen"];
+            var resource_path = ConfigurationManager.AppSettings["reportgendir"];
+
+            var cmd_line = string.Format( @"-jar {0} I={1}/gemm_main2.jrxml 
+                O={1} outputType=pptx Q=""test"" s=1001-005 p=patient 
+                m=mongodb://spock.tgen.org:27017/su2c 
+                wd=/su2c/patient_portal/ClinicalReportFiles/");
+
+            //launch the process
+            var process = System.Diagnostics.Process.Start(new ProcessStartInfo
+                {
+                    FileName = "java",
+                    Arguments = cmd_line,
 
 
-
-            return Process(_repository.GetPatient(id));
+                });
+            return new FileStreamResult(_repository.DownloadReport(id), "application/vnd.openxmlformats-officedocument.presentationml.presentation");
         }
 
 
