@@ -313,7 +313,7 @@ namespace PatientPortal.Models
     }
 
     [BsonIgnoreExtraElements]
-    public class PatientModel : IValidatableObject
+    public class PatientModel 
     {
         [BsonId]
         [Required]
@@ -1131,22 +1131,19 @@ namespace PatientPortal.Models
             Date = DateTime.Today;
         }
 
-        public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
+        public bool IsComplete()
         {
-            if (this.ID != null || this.PatientSummary != String.Empty)
-                return null;
-            else
-            {
-                return new ValidationResult[] { new ValidationResult(
-                    "One of the general information fields is not filled in properly.")};
-            }
+            if (this.ID != null && this.PatientSummary != String.Empty && this.PatientGender != null)
+                return true;
+
+            return false;
         }
 
 
        
     }
 
-    public class PatientViewModel : IValidatableObject
+    public class PatientViewModel 
     {
         public PatientModel Patient { get; set; }
 
@@ -1164,10 +1161,6 @@ namespace PatientPortal.Models
         public IList<FileModel> Files { get; set; }
 
 
-        public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
-        {
-            return Patient.Validate(validationContext);
-        }
     }
 
     public class FileModel

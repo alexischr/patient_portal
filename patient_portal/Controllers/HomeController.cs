@@ -178,7 +178,8 @@ namespace PatientPortal.Controllers
             var cmd_line = string.Format( @"-jar {0} I={1}/gemm_main2.jrxml 
                 O={1} outputType=pptx Q=""test"" s=1001-005 p=patient 
                 m=mongodb://spock.tgen.org:27017/su2c 
-                wd=/su2c/patient_portal/ClinicalReportFiles/");
+                wd=/su2c/patient_portal/ClinicalReportFiles/",
+                                                             patient.);
 
             //launch the process
             var process = System.Diagnostics.Process.Start(new ProcessStartInfo
