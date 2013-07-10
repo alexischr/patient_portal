@@ -185,8 +185,6 @@ namespace PatientPortal.Controllers
                 {
                     FileName = "java",
                     Arguments = cmd_line,
-
-
                 });
             return new FileStreamResult(_repository.DownloadReport(id), "application/vnd.openxmlformats-officedocument.presentationml.presentation");
         }

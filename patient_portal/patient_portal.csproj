@@ -183,8 +183,10 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="assets\images\default_avatar.jpg" />
+    <Content Include="assets\images\green.svg" />
     <Content Include="assets\images\karmanos.jpg" />
     <Content Include="assets\images\logo.gif" />
+    <Content Include="assets\images\red.svg" />
     <Content Include="assets\images\SU2C_2_onWhite.jpg" />
     <Content Include="assets\images\tgen_logo.png" />
     <Content Include="assets\images\tgen_bg.png" />

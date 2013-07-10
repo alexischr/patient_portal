@@ -1,6 +1,17 @@
 ﻿@using PatientPortal.Models;
 @model IList<PatientViewModel>
 
+@helper GetValidateTag(PatientViewModel model)
+    {
+        if (model.Validate(null) != null)
+        {
+          <img src="assets/images/green.svg" class="validation_ind" />
+        }
+        else
+        {
+             <img src="assets/images/green.svg" class="validation_ind" />
+        }
+    }
 <script src="assets/js/jquery.simplemodal.js"> </script>
 <div>
 <div class="button" id="addpatient"><a>Add Patient</a></div>
@@ -8,7 +19,11 @@
     </div>
     @foreach (var viewmodel in Model) {
         <div class="patients" id="@viewmodel.Patient.ID">
-                 <a href="/Home/EditPatient?id=@viewmodel.Patient.ID"><img src="assets/images/karmanos.jpg" />@viewmodel.Patient.ID</a>
+                 <a href="/Home/EditPatient?id=@viewmodel.Patient.ID">
+                     <img src="assets/images/karmanos.jpg" class="sitelogo" />
+                     @GetValidateTag(viewmodel)
+                     @viewmodel.Patient.ID
+                     
             </div>
     }
 
