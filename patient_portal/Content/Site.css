@@ -88,7 +88,7 @@ body {
         width: 16px;
         height: 16px;
         float: left;
-        padding: 5px;
+        padding: 5px 5px 0px 0px;
         display: block;
     }
 

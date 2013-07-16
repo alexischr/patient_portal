@@ -1133,7 +1133,9 @@ namespace PatientPortal.Models
 
         public bool IsComplete()
         {
-            if (this.ID != null && this.PatientSummary != String.Empty && this.PatientGender != null)
+            if (this.ID != null && this.PatientSummary != null
+                && this.PatientGender != null 
+                && this.PatientRace != null)
                 return true;
 
             return false;
