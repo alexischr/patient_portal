@@ -97,6 +97,10 @@ namespace PatientPortal.BackEnd
             return DownloadFile(new FileModel { PatientID = patient_id, Filename = "genomic_report.pptx" });
         }
 
+        public bool IsReportGenerated(string patient_id)
+        {
+            return false;
+        }
 
         public FileModel UploadReport(Stream data, string patient_id)
         {
@@ -108,6 +112,7 @@ namespace PatientPortal.BackEnd
             var result = _gridFS.FindOne( Query.And(
                         Query.EQ("PatientID", file.PatientID), Query.EQ("Filename", file.Filename)
                         ));
+
 
             if (result == null)
                 throw new Exception("Could not find file by that ID.");

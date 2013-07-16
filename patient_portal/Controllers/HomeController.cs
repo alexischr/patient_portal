@@ -175,6 +175,7 @@ namespace PatientPortal.Controllers
             var bin = ConfigurationManager.AppSettings["reportgen"];
             var resource_path = ConfigurationManager.AppSettings["reportgendir"];
             var host = ConfigurationManager.AppSettings["dbhost"];
+            var db = ConfigurationManager.AppSettings["dbname"];
 
             var cmd_line = string.Format( @"-jar {0} I={1}/gemm_main2.jrxml 
                 O={2} outputType=pptx Q=""test"" s={3} p=patient 

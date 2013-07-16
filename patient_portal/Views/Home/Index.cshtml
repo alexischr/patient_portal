@@ -3,7 +3,7 @@
 
 @helper GetValidateTag(PatientViewModel model)
     {
-        if (model.Validate(null) != null)
+        if (model.Patient.IsComplete())
         {
           <img src="assets/images/green.svg" class="validation_ind" />
         }
@@ -19,10 +19,10 @@
     </div>
     @foreach (var viewmodel in Model) {
         <div class="patients" id="@viewmodel.Patient.ID">
-                 <a href="/Home/EditPatient?id=@viewmodel.Patient.ID">
+                 <a href="/Home/EditPatient/@viewmodel.Patient.ID">
                      <img src="assets/images/karmanos.jpg" class="sitelogo" />
                      @GetValidateTag(viewmodel)
-                     @viewmodel.Patient.ID</div>
+                     <p>@viewmodel.Patient.ID</p></div>
     }
 
 <div id="dialog" style="display: none"></div>
