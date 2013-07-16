@@ -51,7 +51,7 @@ body {
     position: relative;
     z-index: 99;
     border-radius: 7px;
-    margin: 30px;
+    margin: 30px 20px 30px 30px;
     overflow: hidden;
     white-space: nowrap;
     float: left;
