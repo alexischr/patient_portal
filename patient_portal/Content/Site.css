@@ -68,6 +68,11 @@ body {
     vertical-align: middle;
 }
 
+.patients p {
+    float: right;
+    padding: 5px;   
+}
+
     .patients img.sitelogo {
         display: block;
         float: none;
