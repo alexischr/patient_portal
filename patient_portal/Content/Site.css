@@ -44,9 +44,7 @@ body {
     display: inline-block;
     max-width: 146px;
     min-width: 146px;
-    max-height: 146px;
-    min-height: 146px;
-    height: 146px;
+    height: 140px;
     width: 146px;
 
     box-shadow: 0 2px 12px -1px rgba(0, 0, 0, .85);
@@ -77,7 +75,7 @@ body {
         display: block;
         float: none;
         margin: auto;
-        margin-top: 29px;
+        margin-top: 25px;
         padding: 5px;
         width: 90%;
         background-color: white;
