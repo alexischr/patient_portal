@@ -16,7 +16,6 @@ body {
     margin-bottom: 0px;
     min-width: 1000px;
     max-width: 1000px;
-    min-height: 1200px;
     background-color: rgba(53, 87, 150, 0.75);
     box-shadow: 0 -1px 15px -2px rgba(53, 87, 150, 0.75);
 }
@@ -46,7 +45,6 @@ body {
     min-width: 146px;
     height: 140px;
     width: 146px;
-
     box-shadow: 0 2px 12px -1px rgba(0, 0, 0, .85);
     position: relative;
     z-index: 99;
