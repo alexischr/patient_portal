@@ -1148,6 +1148,7 @@ namespace PatientPortal.Models
     public class PatientViewModel 
     {
         public PatientModel Patient { get; set; }
+        public IList<FileModel> Files { get; set; }
 
         public PatientViewModel()
         {
@@ -1160,7 +1161,7 @@ namespace PatientPortal.Models
             Files = files;
         }
 
-        public IList<FileModel> Files { get; set; }
+        public bool IsReportAvailable;
 
 
     }

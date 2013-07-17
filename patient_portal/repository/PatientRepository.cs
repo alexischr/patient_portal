@@ -6,6 +6,7 @@ using PatientPortal.Models;
 using System;
 using System.Collections.Generic;
 using System.Configuration;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 
@@ -21,15 +22,56 @@ namespace PatientPortal.BackEnd
 
         readonly string _DBNAME = ConfigurationManager.AppSettings["dbname"];
         readonly string _DBHOST = ConfigurationManager.AppSettings["dbhost"];
+        readonly string _REPORTINTERNALNAME = "genomic_report.pptx";
 
         public PatientModel GetPatient(string id)
         {
             return _patients.FindOneAs<PatientModel>(Query.EQ("_id", id));
+            
         }
+
+        public bool TriggerReportGeneration(string id)
+        {
+            var bin = ConfigurationManager.AppSettings["reportgen"];
+            var resource_path = ConfigurationManager.AppSettings["reportgendir"];
+            var host = ConfigurationManager.AppSettings["dbhost"];
+            var db = ConfigurationManager.AppSettings["dbname"];
+
+            var cmd_line = string.Format(@"-jar {0} I={1}/gemm_main2.jrxml " + 
+                @"O={2} outputType=pptx Q=""test"" s={3} p=patient " +
+                @"m=mongodb://{4}:27017/su2c " +
+                @"wd={1}",
+                                                             bin,
+                                                             resource_path,
+                                                             _REPORTINTERNALNAME,
+                                                             id, host);
+
+            //launch the process
+            var process = System.Diagnostics.Process.Start(new ProcessStartInfo
+            {
+                FileName = "java",
+                Arguments = cmd_line,
+                CreateNoWindow = false,
+                WorkingDirectory = resource_path,
+                ErrorDialog = true
+            });
+
+
+
+            if (!process.Start())
+                throw new Exception(
+                    String.Format("problem starting process with parameters '{}' and '{}'"
+                    , process.StartInfo.FileName, process.StartInfo.Arguments));
+
+            return true;
+        }
+
+
+
 
         public PatientRepository()
         {
-            _server = new MongoServer(new MongoServerSettings { Server = new MongoServerAddress(_DBHOST), SafeMode = SafeMode.True });
+            _server = new MongoServer(new MongoServerSettings { Server = new MongoServerAddress(_DBHOST), SafeMode = SafeMode.FSyncTrue});
 
             //patients
             _patients = _server.GetDatabase(_DBNAME).GetCollection<PatientModel>("patients");
@@ -42,7 +84,11 @@ namespace PatientPortal.BackEnd
         public PatientViewModel GetPatientWithFiles(string id)
         {
             var model = GetPatient(id);
-            return new PatientViewModel( model, GetFilesForPatient(model).ToList());
+            //TODO: create hash map of files with filename as key
+
+            var viewmodel = new PatientViewModel( model, GetFilesForPatient(model).ToList());
+            viewmodel.IsReportAvailable = IsReportGenerated(id);
+            return viewmodel;
         }
 
         public IEnumerable<PatientModel> GetAllPatients()
@@ -99,7 +145,13 @@ namespace PatientPortal.BackEnd
 
         public bool IsReportGenerated(string patient_id)
         {
-            return false;
+            var result = _gridFS.FindOne(Query.And(
+                        Query.EQ("PatientID", patient_id), Query.EQ("Filename", _REPORTINTERNALNAME)
+                        ));
+
+            if (result == null)
+                return false;
+            return true;
         }
 
         public FileModel UploadReport(Stream data, string patient_id)
