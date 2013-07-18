@@ -22,7 +22,7 @@ namespace PatientPortal.BackEnd
 
         readonly string _DBNAME = ConfigurationManager.AppSettings["dbname"];
         readonly string _DBHOST = ConfigurationManager.AppSettings["dbhost"];
-        readonly string _REPORTINTERNALNAME = "genomic_report.pptx";
+        readonly string _REPORTINTERNALNAME = "genomic_report";
 
         public PatientModel GetPatient(string id)
         {
@@ -30,44 +30,51 @@ namespace PatientPortal.BackEnd
             
         }
 
-        public bool TriggerReportGeneration(string id)
+        public void TriggerReportGeneration(string id)
         {
             var bin = ConfigurationManager.AppSettings["reportgen"];
             var resource_path = ConfigurationManager.AppSettings["reportgendir"];
             var host = ConfigurationManager.AppSettings["dbhost"];
             var db = ConfigurationManager.AppSettings["dbname"];
 
-            var cmd_line = string.Format(@"-jar {0} I={1}/gemm_main2.jrxml " + 
-                @"O={2} outputType=pptx Q=""test"" s={3} p=patient " +
-                @"m=mongodb://{4}:27017/su2c " +
+            var cmd_line = string.Format(@"-jar {0} I={1}\gemm_main2.jrxml " + 
+                @"O=.\{2} outputType=pptx Q=""test"" s={3} p=patient " +
+                @"m=mongodb://{4}:27017/{5} " +
                 @"wd={1}",
                                                              bin,
                                                              resource_path,
                                                              _REPORTINTERNALNAME,
-                                                             id, host);
+                                                             id, host, db);
 
             //launch the process
-            var process = System.Diagnostics.Process.Start(new ProcessStartInfo
+            var process = new Process();
+            
+            process.StartInfo = new ProcessStartInfo 
+             {
+                 FileName = "java.exe",
+                 Arguments = cmd_line,
+                 /* WorkingDirectory = resource_path, */
+                 UseShellExecute = true,
+                 LoadUserProfile = false,
+                 
+             };
+
+            try
             {
-                FileName = "java",
-                Arguments = cmd_line,
-                CreateNoWindow = false,
-                WorkingDirectory = resource_path,
-                ErrorDialog = true
-            });
+//                throw new Exception("here");
+                if (!process.Start())
+                    throw new Exception("process.Start() returned false.");
 
-
-
-            if (!process.Start())
+            }
+            catch (Exception e)
+            {
                 throw new Exception(
-                    String.Format("problem starting process with parameters '{}' and '{}'"
-                    , process.StartInfo.FileName, process.StartInfo.Arguments));
+                        String.Format("problem starting process with parameters '{0}' and '{1}' in {2}:\n {3}'"
+                        , process.StartInfo.FileName, process.StartInfo.Arguments
+                        , process.StartInfo.WorkingDirectory, e.Message));
+            }
 
-            return true;
         }
-
-
-
 
         public PatientRepository()
         {

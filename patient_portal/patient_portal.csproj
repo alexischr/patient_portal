@@ -433,8 +433,10 @@
     </Content>
     <Content Include="Views\Home\AddPatient.cshtml" />
     <Content Include="Views\Home\EditPatient.cshtml" />
+    <Content Include="Views\Home\DeletePatient.cshtml" />
     <None Include="Web.GEMM-production.config">
       <DependentUpon>Web.config</DependentUpon>
+      <SubType>Designer</SubType>
     </None>
     <None Include="Web.GEMM-test.config">
       <DependentUpon>Web.config</DependentUpon>

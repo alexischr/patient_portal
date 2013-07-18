@@ -100,11 +100,9 @@
         <p></p>
         <div id="savechanges" class="fixedbutton">
             <input type="submit" value="Save Changes" /></div>
-        @if (!Model.Patient.Locked)
-        {
 
-        }
         <div class="fixedbutton" id="delete" data-patientid="@Model.Patient.ID"><a href="Home/PatientDelete?id=@Model.Patient.ID">Delete Patient</a></div>
+        <div class="fixedbutton">@Html.ActionLink("Presentation", "PPT", new { id = Model.Patient.ID })</div>
         @* <button class="fixedbutton" id="lock_button">Lock changes</button>
     <button class="fixedbutton" id="delete_button">Delete Patient</button>*@
     </div>
@@ -124,7 +122,7 @@
 </div> *@
 
     <div id="patient_generation">
-        <div class="fixedbutton">@Html.ActionLink("Presentation", "PPT", new { id = Model.Patient.ID })</div>
+        
     </div>
 }
 

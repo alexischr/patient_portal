@@ -421,11 +421,10 @@ h5, h6 {
 
 #body {
     clear: both;
-    height: 1200px;
    /* padding-bottom: 15px; */
    /*background-color: rgba(231, 203, 152, 0.49); */
    background-color: rgba(221, 221, 221, 0.85);
-
+   padding-bottom: 60px;
 }
 
     .main-content {
@@ -779,7 +778,7 @@ input, textarea {
 textarea {
     font-family: inherit;
     width: 90%;
-    height: 80px;
+    height: 280px;
 }
 
     input:focus, textarea:focus {
