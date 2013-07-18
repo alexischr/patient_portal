@@ -27,7 +27,7 @@
    
 }
 
-
+<div id="addpatient">
 @using (Html.BeginForm("AddPatient", "Home", FormMethod.Post, new { id = "addpatient_form" }))
 {
 
@@ -81,6 +81,7 @@
     </div>
 
 }
+    </div>
 
 @Scripts.Render("~/bundles/jqueryval")
 
@@ -95,15 +96,14 @@
         $("#addpatient_ajax").click(function (event, ui) {
             if ($('form#addpatient_form').valid()) {
                 $.ajax({
-                    url: 'Home/AddPatient',
+                    url: 'AddPatient',
                     type: 'post',
                     data: $('form#addpatient_form').serialize(),
                     success: function (data) {
-                        $("#dialog").dialog("close");
-                        $("body").load("");
+                        $("body").html(data);
                     },
                     error: function (data) {
-                        $("#dialog").html(data.responseText);
+                        $("#addpatient").html(data.responseText);
                     }
                 });
             }

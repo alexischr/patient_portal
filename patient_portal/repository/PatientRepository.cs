@@ -53,7 +53,7 @@ namespace PatientPortal.BackEnd
              {
                  FileName = "java.exe",
                  Arguments = cmd_line,
-                 /* WorkingDirectory = resource_path, */
+                 WorkingDirectory = resource_path, 
                  UseShellExecute = true,
                  LoadUserProfile = false,
                  

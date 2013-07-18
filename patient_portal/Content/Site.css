@@ -88,7 +88,7 @@ body {
         display: block;
     }
 
-.button a {
+.button  {
     border: 1px solid #e2e2e2;
     padding: 4px 15px;
     text-decoration: none!important;
@@ -107,20 +107,53 @@ body {
     border-right-color: #bababa;
     border-left-color: #bababa;
     display: inline;
+    float: right;
     position: relative;
     z-index: 99;
     overflow: hidden;
     white-space: nowrap;
-    float: right;
     font-weight: bolder;
     cursor: pointer;
 }
+
+.button a 
+{
+    text-decoration: none;
+}
+
 
 .fixedbutton a, .fixedbutton button {
     border: 1px solid #e2e2e2;
     padding: 5px 2px 10px 10px;
     text-decoration: none!important;
-    margin: 4px 0px 0px 0px;
+    margin: 8px 0px 2px 0px;
+    background: #FFFFFF; /* old browsers */
+    background: -moz-linear-gradient(top, #FFFFFF 0%, #CCCBCB 50%, #929292 100%); /* firefox */
+    background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,white), color-stop(50%,#CCCBCB), color-stop(100%,#929292));
+    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#FFFFFF', endColorstr='#EBEBEB',GradientType=0 ); /* ie */
+    box-shadow: 0px 1px 1px rgba(0,0,0,.5);
+    -webkit-box-shadow: 0px 1px 2px rgba(0,0,0,.2);
+    -moz-box-shadow: 0px 1px 2px rgba(0,0,0,.2);
+    -moz-border-radius: 3px;
+    -webkit-border-radius: 3px;
+    border-radius: 3px;
+    border-bottom-color: #a0a0a0;
+    border-right-color: #bababa;
+    border-left-color: #bababa;
+    font-weight: bold;
+    display: inline-block;
+    position: relative;
+    min-width: 160px;
+    max-width: 160px;
+    height: 19px;
+    color: #333;
+}
+
+.fixedbutton_disabled a , .fixedbutton_disabled button {
+    border: 1px solid #e2e2e2;
+    padding: 5px 2px 10px 10px;
+    text-decoration: none!important;
+    margin: 8px 0px 2px 0px;
     background: #FFFFFF; /* old browsers */
     background: -moz-linear-gradient(top, #FFFFFF 0%, #CCCBCB 50%, #929292 100%); /* firefox */
     background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,white), color-stop(50%,#CCCBCB), color-stop(100%,#929292));
@@ -136,39 +169,6 @@ body {
     border-left-color: #bababa;
     display: inline-block;
     position: relative;
-    float: left;
-    font-weight: bold;
-    min-width: 160px;
-    max-width: 160px;
-    height: 19px;
-    color: #333;
-}
-
-.fixedbutton_disabled a, .fixedbutton_disabled button {
-    border: 1px solid #e2e2e2;
-    padding: 5px 15px 5px 7px;
-    text-decoration: none!important;
-    margin: 4px 0px 0px 0px;
-    background: #FFFFFF; /* old browsers */
-    background: -moz-linear-gradient(top, #FFFFFF 0%, #F3F3F3 50%, #EBEBEB 100%); /* firefox */
-    background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,white), color-stop(50%,#CCCBCB), color-stop(100%,#929292));
-    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#FFFFFF', endColorstr='#EBEBEB',GradientType=0 ); /* ie */
-    box-shadow: 0px 1px 1px rgba(0,0,0,.5);
-    -webkit-box-shadow: 0px 1px 2px rgba(0,0,0,.2);
-    -moz-box-shadow: 0px 1px 2px rgba(0,0,0,.2);
-    border-radius: 3px;
-    -moz-border-radius: 3px;
-    -webkit-border-radius: 3px;
-    border-bottom-color: #a0a0a0;
-    border-right-color: #bababa;
-    border-left-color: #bababa;
-    display: inline-block;
-    position: relative;
-    z-index: 99;
-    overflow: hidden;
-    white-space: nowrap;
-    float: left;
-    font-weight: bold;
     min-width: 160px;
     max-width: 160px;
     height: 19px;

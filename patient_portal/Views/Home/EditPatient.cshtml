@@ -1,6 +1,5 @@
 ﻿@using PatientPortal.Utility
 @model PatientPortal.Models.PatientViewModel
-<script src="~/Content/js/jquery.filedrop.js"></script>
 @{
     var tabs = new HashSet<string>();
     var fields = new Dictionary<string, List<ModelMetadata>>();
@@ -26,7 +25,8 @@
     }
    
 }
-@using (Html.BeginForm())
+<div id="editpatient">
+@using (Html.BeginForm("EditPatient", "Home", FormMethod.Post, new { id = "editpatient_form" }))
 {
 
     <div id="patient_details">
@@ -98,33 +98,30 @@
     <div id="patient_form">
         @Html.ValidationSummary(true)
         <p></p>
-        <div id="savechanges" class="fixedbutton">
-            <input type="submit" value="Save Changes" /></div>
+        @* <div id="savechanges" class="fixedbutton">
+            <input type="submit" value="Save Changes" />*@
+        <div class="fixedbutton" id="editpatient_ajax"><a>Save Changes</a></div>
 
-        <div class="fixedbutton" id="delete" data-patientid="@Model.Patient.ID"><a href="Home/PatientDelete?id=@Model.Patient.ID">Delete Patient</a></div>
-        <div class="fixedbutton">@Html.ActionLink("Presentation", "PPT", new { id = Model.Patient.ID })</div>
+
+        <h3>Resources</h3>
+        @if (Model.IsReportAvailable)
+        { 
+            <div class="fixedbutton">@Html.ActionLink("Download", "PPT", new { id = Model.Patient.ID })</div>
+        }
+        else
+        {
+            <div class="fixedbutton_disabled"><a>Case Slides (PPT)</a></div>
+            <p>The report is being generated.</p>
+        }
+        <h3>Administration</h3>
+        <div class="fixedbutton" id="delete" data-patientid="@Model.Patient.ID"><a href="Home/PatientDelete?id=@Model.Patient.ID">Delete Record</a></div>
+        <div class="fixedbutton" id="track" data-patientid="@Model.Patient.ID"><a href="Home/ChangeHistory?id=@Model.Patient.ID">Change History</a></div>
+        <div class="fixedbutton" id="track" data-patientid="@Model.Patient.ID"><a href="Home/ChangeHistory?id=@Model.Patient.ID">Lock Record</a></div>
         @* <button class="fixedbutton" id="lock_button">Lock changes</button>
     <button class="fixedbutton" id="delete_button">Delete Patient</button>*@
     </div>
-
-@*
-<div id="patient_files">
-    <h3>Files</h3>
-    @if (Model.Files.Count == 0)
-    {
-        <p>No files are stored for this patient.</p>
-    }
-        
-     @foreach (var filemodel in Model.Files)
-     {
-       <div class="fixedbutton">@Html.ActionLink(filemodel.Filename, "Download", new { id = filemodel.ID })</div>
-     }
-</div> *@
-
-    <div id="patient_generation">
-        
-    </div>
 }
+   </div>
 
 @Scripts.Render("~/bundles/jqueryval")
 
@@ -137,112 +134,21 @@
             $(this).datepicker();
         })
     });
-    //$(function () {
 
-    function dropify(id) {
-
-        var dropbox = $('#' + id + '_dropbox'),
-            message = $('.message', dropbox);
-
-        dropbox.filedrop({
-            // The name of the $_FILES entry:
-            paramname: 'files',
-
-            maxfiles: 2,
-            maxfilesize: 2,
-            url: '/Home/UploadFiles/?id=' + id,
-
-            uploadFinished: function (i, file, response) {
-                $.data(file).addClass('done');
-                // response is the JSON object that post_file.php returns
-            },
-
-            error: function (err, file) {
-                switch (err) {
-                    case 'BrowserNotSupported':
-                        showMessage('Your browser does not support HTML5 file uploads!');
-                        break;
-                    case 'TooManyFiles':
-                        alert('Too many files! Please select 5 at most! (configurable)');
-                        break;
-                    case 'FileTooLarge':
-                        alert(file.name + ' is too large! Please upload files up to 2mb (configurable).');
-                        break;
-                    default:
-                        break;
+    $("#editpatient_ajax").click(function (event, ui) {
+        if ($('form#editpatient_form').valid()) {
+            $.ajax({
+                url: 'EditPatient',
+                type: 'post',
+                data: $('form#editpatient_form').serialize(),
+                success: function (data) {
+                 //   $("html").html(data);
+                },
+                error: function (data) {
+                    $("#editpatient").html(data.responseText);
                 }
-            },
-
-            // Called before each upload is started
-            beforeEach: function (file) {
-                if (!file.type.match(/^image\//)) {
-                    alert('Only images are allowed!');
-
-                    // Returning false will cause the
-                    // file to be rejected
-                    return false;
-                }
-            },
-
-            uploadStarted: function (i, file, len) {
-                createImage(file);
-            },
-
-            progressUpdated: function (i, file, progress) {
-                $.data(file).find('.progress').width(progress);
-            }
-
-        });
-
-        var template = '<div class="preview">' +
-                            '<span class="imageHolder">' +
-                                '<img />' +
-                                '<span class="uploaded"></span>' +
-                            '</span>' +
-                            '<div class="progressHolder">' +
-                                '<div class="progress"></div>' +
-                            '</div>' +
-                        '</div>';
-
-
-        function createImage(file) {
-
-            var preview = $(template),
-                image = $('img', preview);
-
-            var reader = new FileReader();
-
-            image.width = 100;
-            image.height = 100;
-
-            reader.onload = function (e) {
-
-                // e.target.result holds the DataURL which
-                // can be used as a source of the image:
-
-                image.attr('src', e.target.result);
-            };
-
-            // Reading the file as a DataURL. When finished,
-            // this will trigger the onload function above:
-            reader.readAsDataURL(file);
-
-            message.hide();
-            preview.appendTo(dropbox);
-
-            // Associating a preview container
-            // with the file, using jQuery's $.data():
-
-            $.data(file, preview);
+            });
         }
-
-        function showMessage(msg) {
-            message.html(msg);
-        }
-    };
-    $(function () {
-        dropify("patient_files");
     });
 
-    //});
 </script>

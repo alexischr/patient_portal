@@ -29,7 +29,7 @@ namespace PatientPortal.Controllers
         [Authorize]
         public ActionResult AddPatient()
         {
-            return PartialView(new PatientViewModel(new PatientModel(), new List<FileModel>()));
+            return View(new PatientViewModel(new PatientModel(), new List<FileModel>()));
         }
 
         [Authorize]
@@ -79,6 +79,7 @@ namespace PatientPortal.Controllers
             return RedirectToAction("Index");
         }
 
+        [Authorize]
         [HttpGet]
         public ActionResult EditPatient(string id)
         {
@@ -90,6 +91,7 @@ namespace PatientPortal.Controllers
             return View(model);
         }
 
+        [Authorize]
         [HttpPost]
         public ActionResult EditPatient(PatientViewModel model)
         {
@@ -98,9 +100,9 @@ namespace PatientPortal.Controllers
                 _repository.UpdatePatient(model);
                 return RedirectToAction("Index");
             }
-            //return View(model); 
-            //TODO: Return properly with model errors (needs to be submitted with AJAX in dialog
-            return RedirectToAction("Index");
+            Response.TrySkipIisCustomErrors = true;
+            Response.StatusCode = 500;
+            return PartialView(model);
         }
 
 

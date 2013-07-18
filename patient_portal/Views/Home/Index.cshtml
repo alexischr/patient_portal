@@ -14,7 +14,7 @@
     }
 <script src="assets/js/jquery.simplemodal.js"> </script>
 <div>
-<div class="button" id="addpatient"><a>Add Patient</a></div>
+<div class="button" id="addpatient">@Html.ActionLink("Add Patient","AddPatient")</div>
     <h2>Patients</h2>
     </div>
     @foreach (var viewmodel in Model) {
