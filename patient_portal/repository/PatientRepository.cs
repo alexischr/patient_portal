@@ -23,6 +23,7 @@ namespace PatientPortal.BackEnd
         readonly string _DBNAME = ConfigurationManager.AppSettings["dbname"];
         readonly string _DBHOST = ConfigurationManager.AppSettings["dbhost"];
         readonly string _REPORTINTERNALNAME = "genomic_report";
+        readonly string _REPORTINTERNALEXT = "genomic_report.pptx";
 
         public PatientModel GetPatient(string id)
         {
@@ -147,18 +148,27 @@ namespace PatientPortal.BackEnd
 
         public Stream DownloadReport(string patient_id)
         {
-            return DownloadFile(new FileModel { PatientID = patient_id, Filename = "genomic_report.pptx" });
+            return DownloadFile(new FileModel { PatientID = patient_id, Filename = _REPORTINTERNALEXT });
         }
 
         public bool IsReportGenerated(string patient_id)
         {
+
             var result = _gridFS.FindOne(Query.And(
-                        Query.EQ("PatientID", patient_id), Query.EQ("Filename", _REPORTINTERNALNAME)
+                        Query.EQ("metadata.PatientID", patient_id), Query.EQ("metadata.Filename", _REPORTINTERNALEXT)
                         ));
 
-            if (result == null)
-                return false;
-            return true;
+            if (result != null)
+                return true;
+
+             /*   var resource_path = ConfigurationManager.AppSettings["reportgendir"];
+                var filename = Path.Combine(resource_path, _REPORTINTERNALEXT);
+                if (File.Exists(filename))
+                    UploadReport(new FileStream(filename, FileMode.Open), patient_id);
+                else
+                    return false; */
+                    
+                return true;
         }
 
         public FileModel UploadReport(Stream data, string patient_id)
@@ -169,7 +179,7 @@ namespace PatientPortal.BackEnd
         public Stream DownloadFile(FileModel file)
         {
             var result = _gridFS.FindOne( Query.And(
-                        Query.EQ("PatientID", file.PatientID), Query.EQ("Filename", file.Filename)
+                        Query.EQ("metadata.PatientID", file.PatientID), Query.EQ("metadata.Filename", file.Filename)
                         ));
 
 
