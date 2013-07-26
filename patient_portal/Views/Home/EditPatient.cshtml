@@ -106,7 +106,7 @@
         <h3>Resources</h3>
         @if (Model.IsReportAvailable)
         { 
-            <div class="fixedbutton">@Html.ActionLink("Download", "PPT", new { id = Model.Patient.ID })</div>
+            <div class="fixedbutton">@Html.ActionLink("Case Slides (PPT)", "PPT", new { id = Model.Patient.ID })</div>
         }
         else
         {

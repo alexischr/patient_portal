@@ -41,7 +41,7 @@ namespace PatientPortal.BackEnd
             var cmd_line = string.Format(@"-jar {0} I={1}\gemm_main2.jrxml " + 
                 @"O=.\{2} outputType=pptx Q=""test"" s={3} p=patient " +
                 @"m=mongodb://{4}:27017/{5} " +
-                @"wd={1}",
+                @"wd={1} g=true",
                                                              bin,
                                                              resource_path,
                                                              _REPORTINTERNALNAME,
@@ -139,7 +139,7 @@ namespace PatientPortal.BackEnd
         {
             var file_model = new FileModel();
 
-            file_model.Filename = gfs_entry.Metadata["Filename"].AsString;
+            file_model.Filename = gfs_entry.Name;
             file_model.PatientID = gfs_entry.Metadata["PatientID"].AsString;
             file_model.ID = gfs_entry.Id.AsObjectId;  
 
@@ -155,20 +155,14 @@ namespace PatientPortal.BackEnd
         {
 
             var result = _gridFS.FindOne(Query.And(
-                        Query.EQ("metadata.PatientID", patient_id), Query.EQ("metadata.Filename", _REPORTINTERNALEXT)
+                        Query.EQ("metadata.PatientID", patient_id), Query.EQ("filename", _REPORTINTERNALEXT)
                         ));
 
-            if (result != null)
+            if (result == null)
+                return false;
+            else
                 return true;
 
-             /*   var resource_path = ConfigurationManager.AppSettings["reportgendir"];
-                var filename = Path.Combine(resource_path, _REPORTINTERNALEXT);
-                if (File.Exists(filename))
-                    UploadReport(new FileStream(filename, FileMode.Open), patient_id);
-                else
-                    return false; */
-                    
-                return true;
         }
 
         public FileModel UploadReport(Stream data, string patient_id)
@@ -179,7 +173,7 @@ namespace PatientPortal.BackEnd
         public Stream DownloadFile(FileModel file)
         {
             var result = _gridFS.FindOne( Query.And(
-                        Query.EQ("metadata.PatientID", file.PatientID), Query.EQ("metadata.Filename", file.Filename)
+                        Query.EQ("metadata.PatientID", file.PatientID), Query.EQ("filename", file.Filename)
                         ));
 
 
