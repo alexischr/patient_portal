@@ -147,6 +147,7 @@ body {
     max-width: 160px;
     height: 19px;
     color: #333;
+    cursor: pointer;
 }
 
 .fixedbutton_disabled a , .fixedbutton_disabled button {
@@ -843,6 +844,16 @@ textarea {
 
 .error {
     color: #e80c4d;
+    font-weight: bold;
+    font: smaller;
+    display: block;
+}
+
+.success {
+    color: #23b926;
+    font-weight: bold;
+    font: smaller;
+    display: block;
 }
 
 /* styles for validation helpers */

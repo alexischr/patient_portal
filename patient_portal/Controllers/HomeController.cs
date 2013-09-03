@@ -16,14 +16,34 @@ namespace PatientPortal.Controllers
     [Authorize]
     public class HomeController : Controller
     {
-        private PatientRepository _repository = new PatientRepository();
+        private PatientRepository __repository;
+        private HistoryRepository __history;
 
+        public HistoryRepository History
+        {
+            get
+            {
+                if (__history == null)
+                    return (__history = new HistoryRepository(new AppSettingsConfig(), User));
+                else return __history;
+            }
+        }
+
+        private PatientRepository Patients
+        {
+            get
+            {
+                if (__repository == null)
+                    return (__repository = new PatientRepository(new AppSettingsConfig(), User));
+                else return __repository;
+            }
+        }
 
         [HttpGet]
         [Authorize]
         public ActionResult Index()
         {
-            return View(_repository.GetAllPatientsWithFileInfo().ToList<PatientViewModel>());
+            return View(Patients.GetAllPatientsWithFileInfo().ToList<PatientViewModel>());
         }
 
         [Authorize]
@@ -40,7 +60,7 @@ namespace PatientPortal.Controllers
             {
                 try
                 {
-                    _repository.AddPatient(model.Patient);
+                    Patients.Add(model.Patient);
                 }
                 catch (MongoDB.Driver.MongoSafeModeException e)
                 {
@@ -62,7 +82,7 @@ namespace PatientPortal.Controllers
         [HttpGet]
         public ActionResult PatientDetails(string id)
         {
-            var model = _repository.GetPatientWithFiles(id);
+            var model = Patients.GetPatientWithFiles(id);
             return PartialView(model);
         }
 
@@ -71,11 +91,11 @@ namespace PatientPortal.Controllers
         {
             if (ModelState.IsValid)
             {
-                _repository.UpdatePatient(model);
+                Patients.Update(model.Patient);
                 return RedirectToAction("Index");
             }
             //return View(model); 
-            //TODO: Return properly with model errors (needs to be submitted with AJAX in dialog
+            //TODO: Return properly with model errors (needs to be submitted with AJAX in dialog)
             return RedirectToAction("Index");
         }
 
@@ -83,10 +103,10 @@ namespace PatientPortal.Controllers
         [HttpGet]
         public ActionResult EditPatient(string id)
         {
-            var model = _repository.GetPatientWithFiles(id);
+            var model = Patients.GetPatientWithFiles(id);
 
             if (!model.IsReportAvailable)
-                _repository.TriggerReportGeneration(id);
+                Patients.TriggerReportGeneration(id);
 
             return View(model);
         }
@@ -97,22 +117,40 @@ namespace PatientPortal.Controllers
         {
             if (ModelState.IsValid)
             {
-                _repository.UpdatePatient(model);
-                return RedirectToAction("Index");
+                Patients.Update(model.Patient);
+                ViewBag.Message = "Your changes have been saved.";
+                ViewBag.MessageStyle = "success";
+                return PartialView(model);
             }
             Response.TrySkipIisCustomErrors = true;
             Response.StatusCode = 500;
+            ViewBag.Message = "There were issues with data entry. Please review any errors in the fields below.";
+            ViewBag.MessageStyle = "error";
             return PartialView(model);
         }
 
+        [HttpGet]
+        public ActionResult DeletePatient(string id)
+        {
+            var model = Patients.Get(id);
+            return View(model);
+        }
 
+        [HttpPost]
+        public ActionResult DeletePatient(PatientModel model)
+        {
+                Patients.Delete(model.ID);
+                return RedirectToAction("Index");
+        }
 
 
         [HttpGet]
-        public ActionResult PatientDelete(string id)
+        public ActionResult ChangeHistory(string id)
         {
-            _repository.DeletePatient(id);
-            return RedirectToAction("Index");
+            
+            var model = History.GetChangeHistory(id);
+            ViewBag.PatientID = id;
+            return View(model);
         }
 
         [HttpPost]
@@ -121,7 +159,7 @@ namespace PatientPortal.Controllers
             if (ModelState.IsValid)
             {
                 model.Patient.Locked = true;
-                _repository.UpdatePatient(model);
+                Patients.Update(model.Patient);
                 return RedirectToAction("Index");
             }
             //return View(model); 
@@ -137,7 +175,7 @@ namespace PatientPortal.Controllers
             var filemodel = new FileModel();
             filemodel.ID = ObjectId.Parse(id);
 
-            var fs = new FileStreamResult(_repository.DownloadFile(filemodel), " application/octet-stream");
+            var fs = new FileStreamResult(Patients.DownloadFile(filemodel), "application/octet-stream");
             fs.FileDownloadName = filemodel.Filename;
             return fs;
         }
@@ -150,7 +188,7 @@ namespace PatientPortal.Controllers
                 var fileinfo = new FileModel();
                 fileinfo.Filename = file.FileName;
                 fileinfo.PatientID = id;
-                _repository.UploadFile(file.InputStream, fileinfo); 
+                Patients.UploadFile(file.InputStream, fileinfo); 
                 //string filePath = Path.Combine(Server.MapPath(".." + "/target"), file.FileName);
                 //System.IO.File.WriteAllBytes(filePath, ReadData(file.InputStream));
             }
@@ -176,7 +214,7 @@ namespace PatientPortal.Controllers
 
         public ActionResult PPT(string id)
         {
-            return new FileStreamResult(_repository.DownloadReport(id), "application/vnd.openxmlformats-officedocument.presentationml.presentation");
+            return new FileStreamResult(Patients.DownloadReport(id), "application/vnd.openxmlformats-officedocument.presentationml.presentation");
         }
 
 

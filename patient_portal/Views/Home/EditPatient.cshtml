@@ -28,10 +28,11 @@
 <div id="editpatient">
 @using (Html.BeginForm("EditPatient", "Home", FormMethod.Post, new { id = "editpatient_form" }))
 {
-
-    <div id="patient_details">
+    
+    <div id="patient_details">    
         <h2>@Model.Patient.ID</h2>
         @Html.HiddenFor(model => model.Patient.ID)
+        <span class="@ViewBag.MessageStyle">@ViewBag.Message</span>
         <div id="tabs">
             <ul>
                 @foreach (var tab in tabs)
@@ -114,8 +115,8 @@
             <p>The report is being generated.</p>
         }
         <h3>Administration</h3>
-        <div class="fixedbutton" id="delete" data-patientid="@Model.Patient.ID"><a href="Home/PatientDelete?id=@Model.Patient.ID">Delete Record</a></div>
-        <div class="fixedbutton" id="track" data-patientid="@Model.Patient.ID"><a href="Home/ChangeHistory?id=@Model.Patient.ID">Change History</a></div>
+        <div class="fixedbutton" id="delete" data-patientid="@Model.Patient.ID">@Html.ActionLink("Delete Record", "DeletePatient", new { id = Model.Patient.ID } )</div>
+        <div class="fixedbutton" id="track" data-patientid="@Model.Patient.ID">@Html.ActionLink("Change History", "ChangeHistory", new { id = Model.Patient.ID } )</div>
         <div class="fixedbutton" id="track" data-patientid="@Model.Patient.ID"><a href="Home/ChangeHistory?id=@Model.Patient.ID">Lock Record</a></div>
         @* <button class="fixedbutton" id="lock_button">Lock changes</button>
     <button class="fixedbutton" id="delete_button">Delete Patient</button>*@
@@ -137,16 +138,20 @@
 
     $("#editpatient_ajax").click(function (event, ui) {
         if ($('form#editpatient_form').valid()) {
+
             $.ajax({
                 url: 'EditPatient',
                 type: 'post',
                 data: $('form#editpatient_form').serialize(),
-                success: function (data) {
-                 //   $("html").html(data);
+             /*   success: function (data) {
+                    $("#editpatient").html(data);
                 },
                 error: function (data) {
                     $("#editpatient").html(data.responseText);
-                }
+                },*/
+                complete: function (data) {
+                   $("#editpatient").html(data.responseText);
+            }
             });
         }
     });

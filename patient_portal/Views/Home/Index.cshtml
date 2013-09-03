@@ -25,33 +25,11 @@
                      <p>@viewmodel.Patient.ID</p></div>
     }
 
-<div id="dialog" style="display: none"></div>
+
 @section Scripts
 {
     <script>
-        $('.ui-widget-overlay').live('click touchstart',
-               function () {
-                   $("#dialog").dialog("close");
-                   $("body").load("");
-               });
-
-        $("#addpatient").click(function (event, ui) {
-            //load up 
-
-            $.get("Home/AddPatient", $.param({ }, true), function (data, status, XHR) {
-                $("#dialog").html(data);
-                $("#dialog").dialog({
-                    modal: true, draggable: false, width: '800px', resizable: false, position: ['middle', 20]
-                });
-
-                $("#dialog").dialog('option', 'position', ['middle', 20]);
-
-            });
-
-
-
-        });
-
+    
 
     </script>
     

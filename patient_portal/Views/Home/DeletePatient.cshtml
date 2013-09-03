@@ -1,1 +1,10 @@
-﻿
+﻿@using PatientPortal.Utility
+@model PatientPortal.Models.PatientModel
+
+@Html.ValidationSummary()
+<h2>Are you sure you want to delete patient record "@Model.ID" ?</h2>
+@using (@Html.BeginForm(new { id = Model.ID}))
+{
+    <input type="submit" value="Yes, Confirm Deletion" />
+    @Html.ActionLink("Back to Editing", "EditPatient", new { id = @Model.ID })
+}

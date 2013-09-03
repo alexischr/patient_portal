@@ -9,34 +9,47 @@ using System.Configuration;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using System.Security.Principal;
+
 
 namespace PatientPortal.BackEnd
 {
 
-    public class PatientRepository
+
+    public class AppSettingsConfig : RepoCfg
     {
-        private MongoServer _server;
-        private MongoDatabase _db;
-        private MongoCollection _patients;
-        private MongoGridFS _gridFS;
-
-        readonly string _DBNAME = ConfigurationManager.AppSettings["dbname"];
-        readonly string _DBHOST = ConfigurationManager.AppSettings["dbhost"];
-        readonly string _REPORTINTERNALNAME = "genomic_report";
-        readonly string _REPORTINTERNALEXT = "genomic_report.pptx";
-
-        public PatientModel GetPatient(string id)
+        public AppSettingsConfig()
         {
-            return _patients.FindOneAs<PatientModel>(Query.EQ("_id", id));
-            
+            this.MongoConfig = new MongoRepoCfg
+            {
+                Address = ConfigurationManager.AppSettings["dbhost"],
+                DBName = ConfigurationManager.AppSettings["dbname"],
+            };
+
         }
+    }
+
+    public class PatientRepository : MongoRepo<PatientModel>
+    {
+        protected HistoryRepository _history;
+        const string _REPORTINTERNALNAME = "genomic_report";
+        const string _REPORTINTERNALEXT = "genomic_report.pptx";
+        const string _COLLECTION = "patients";
+
+        public PatientRepository(RepoCfg config, IPrincipal claim) :
+            base(config, claim, config.MongoConfig, _COLLECTION)
+        {
+            _history = new HistoryRepository(config, claim);
+        }
+
+
 
         public void TriggerReportGeneration(string id)
         {
             var bin = ConfigurationManager.AppSettings["reportgen"];
             var resource_path = ConfigurationManager.AppSettings["reportgendir"];
-            var host = ConfigurationManager.AppSettings["dbhost"];
-            var db = ConfigurationManager.AppSettings["dbname"];
+            var host = Cfg.MongoConfig.Address;
+            var db = Cfg.MongoConfig.DBName;
 
             var cmd_line = string.Format(@"-jar {0} I={1}\gemm_main2.jrxml " + 
                 @"O=.\{2} outputType=pptx Q=""test"" s={3} p=patient " +
@@ -77,21 +90,10 @@ namespace PatientPortal.BackEnd
 
         }
 
-        public PatientRepository()
-        {
-            _server = new MongoServer(new MongoServerSettings { Server = new MongoServerAddress(_DBHOST), SafeMode = SafeMode.FSyncTrue});
-
-            //patients
-            _patients = _server.GetDatabase(_DBNAME).GetCollection<PatientModel>("patients");
-            _patients.EnsureIndex(IndexKeys.Ascending("_id"), IndexOptions.SetUnique(true));
-            _gridFS = _server.GetDatabase(_DBNAME).GridFS;
-
-            new MongoDB.Web.Providers.MongoDBMembershipProvider();
-        }
-
+  
         public PatientViewModel GetPatientWithFiles(string id)
         {
-            var model = GetPatient(id);
+            var model = Get(id);
             //TODO: create hash map of files with filename as key
 
             var viewmodel = new PatientViewModel( model, GetFilesForPatient(model).ToList());
@@ -99,31 +101,16 @@ namespace PatientPortal.BackEnd
             return viewmodel;
         }
 
-        public IEnumerable<PatientModel> GetAllPatients()
-        {
-            MongoCursor cursor =  _patients.FindAllAs<PatientModel>();
 
-            foreach (PatientModel result in cursor)
-            {
-                yield return result;
-            }
-        }
 
         public IEnumerable<PatientViewModel> GetAllPatientsWithFileInfo()
         {
-            foreach (PatientModel result in GetAllPatients())
+            foreach (PatientModel result in GetAll())
             {
                 yield return new PatientViewModel(result, GetFilesForPatient(result).ToList());
             }
         }
 
-
-        public void AddPatient(PatientModel patient)
-        {
-            var result =_patients.Insert<PatientModel>(patient);
-            if (result.ErrorMessage != null)
-                throw new Exception("Problem inserting document");
-        }
 
         public IEnumerable<FileModel> GetFilesForPatient(PatientModel patient)
         {
@@ -193,17 +180,45 @@ namespace PatientPortal.BackEnd
             return fileinfo;
         }
 
-
-        internal void UpdatePatient(PatientViewModel model)
+        public override void Update(PatientModel model)
         {
-            _patients.Save<PatientModel>(model.Patient);
+            base.Update(model);
+            _history.Add(new ChangeRecord
+                    {
+                        Action = "modify",
+                        PatientID = model.ID,
+                        PatientName = model.ID,
+                        Timestamp = DateTime.Now,
+                        UserName = Claim.Identity.Name
+                    });
+
         }
 
-        internal void DeletePatient(string id)
+        public override void Add(PatientModel model)
         {
-            var result = _patients.Remove(Query.EQ("_id", id));
-            //TODO: Check!
-
+            base.Add(model);
+            _history.Add(new ChangeRecord
+                {
+                    Action = "add",
+                    PatientID = model.ID,
+                    PatientName = model.ID, /*todo: separate string ID from mongo _id */
+                    Timestamp = DateTime.Now,
+                    UserName = Claim.Identity.Name
+                });
         }
+
+        public override void Delete(string id)
+        {
+            base.Delete(id);
+            _history.Add(new ChangeRecord
+            {
+                Action = "delete",
+                PatientID = id,
+                PatientName = id, /*todo: separate string ID from mongo _id */
+                Timestamp = DateTime.Now,
+                UserName = Claim.Identity.Name
+            });
+        }
+
     }
 }

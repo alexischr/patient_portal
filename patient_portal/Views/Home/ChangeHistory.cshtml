@@ -1,0 +1,33 @@
+﻿@using PatientPortal.Utility
+
+<h2>Change Tracking for Patient @ViewBag.PatientID</h2>
+<table id="change_table">
+    <thead>
+        <tr>
+        <td>User ID</td>
+        <td>Activity</td>
+        <td>Time</td>
+        </tr>
+    </thead>
+    <tbody>
+            @foreach (var record in Model)
+            { 
+           <tr>
+               <td>@record.UserName</td>
+               <td>@record.Action</td>
+               <td>@record.Timestamp</td>
+           </tr>
+            }
+    </tbody></table>
+
+@Scripts.Render("~/bundles/jquery-datatables")
+
+@section Scripts
+{
+    <script>
+        //$("#change_table").html(" ");
+        $("#change_table").dataTable();
+        
+    </script>
+
+}
